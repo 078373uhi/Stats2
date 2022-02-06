@@ -80,10 +80,15 @@ odds / (1 + odds)
 newdata <- data.frame(hours_studied = 10, selftest = 1, alcohol = 7)
 predict(m_glm2, newdata=newdata, type = 'response')
 
+## Comparing models
+m_0 = glm(passed_test ~ 1, data=d, family= binomial)
+m_1 = glm(passed_test ~ hours_studied + selftest, data=d, family= binomial)
+m_2 = glm(passed_test ~ hours_studied + selftest + alcohol, data=d, family=binomial)
 
+tab_model(m_0, m_1, m_2)
+anova(m_0, m_1, m_2, test = "Chisq")
 
-
-
+pchisq(38.253, df=1, lower.tail=F)
 
 
 
