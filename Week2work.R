@@ -100,6 +100,121 @@ pred_1 = mean(pred[y == 1])
 pred_1 - pred_0
 
 
+## Poisson regression
+
+set.seed(1)
+x = runif(1000, 1, 10)        ## sample x from a uniform distribution
+mu = exp(-2 + 0.3*x)          ## linear prediction with inverse of the "log" link
+y = rpois(n=1000, lambda=mu)  ## generate y from prediction with Poisson error distribution
+d = data.frame(retweets=y, funny=x)
+
+m = glm(retweets ~ funny, data=d, family=poisson('log'))
+
+tab_model(m)
+
+## When to use Poisson regression
+
+table(d$retweets)
+
+## plot predicted fit
+plot_model(m, type='pred', show.data=T, grid=T)
+
+## Interpreting Coefficients
+
+0.14 * 1.34^9
+
+## A visual explanation ## this bit does not work
+
+glm(y~x, family=gaussian('log'))
+
+glm(y~x, family=poisson('log'))
+
+glm(y~x, family=poisson('identity'))
+
+## Exerise
+
+gen_data <- function(b0, b1, y_name, x_name){
+  set.seed(1)
+  d = data.frame(x = runif(10000, 0,10))
+  mu = log(b0) + log(b1)*d$x
+  prob = 1 / (1 + exp(-mu))
+  d$y = rbinom(10000, 1, prob = prob)
+  colnames(d) = c(x_name, y_name)
+  d
+}
+
+d = gen_data(b0 = 0.0001, b1 = 3, y_name = 'president', x_name = 'best_words')
+m = glm(president ~ best_words, data = d, family=binomial)
+
+tab_model(m)
+
+## The effect is positive
+gen_data <- function(b0, b1, y_name, x_name){
+  set.seed(1)
+  d = data.frame(x = runif(10000, 0,10))
+  mu = log(b0) + log(b1)*d$x
+  prob = 1 / (1 + exp(-mu))
+  d$y = rbinom(10000, 1, prob = prob)
+  colnames(d) = c(x_name, y_name)
+  d
+}
+
+d = gen_data(b0 = 0.0001, b1 = 5, y_name = 'president', x_name = 'best_words')
+m = glm(president ~ best_words, data = d, family=binomial)
+
+tab_model(m)
+
+## The effect is negative
+gen_data <- function(b0, b1, y_name, x_name){
+  set.seed(1)
+  d = data.frame(x = runif(10000, 0,10))
+  mu = log(b0) + log(b1)*d$x
+  prob = 1 / (1 + exp(-mu))
+  d$y = rbinom(10000, 1, prob = prob)
+  colnames(d) = c(x_name, y_name)
+  d
+}
+
+d = gen_data(b0 = 0.1, b1 = 1, y_name = 'president', x_name = 'best_words')
+m = glm(president ~ best_words, data = d, family=binomial)
+
+tab_model(m)
+
+## There is no effect
+gen_data <- function(b0, b1, y_name, x_name){
+  set.seed(1)
+  d = data.frame(x = runif(10000, 0,10))
+  mu = log(b0) + log(b1)*d$x
+  prob = 1 / (1 + exp(-mu))
+  d$y = rbinom(10000, 1, prob = prob)
+  colnames(d) = c(x_name, y_name)
+  d
+}
+
+d = gen_data(b0 = 0.9, b1 = 0, y_name = 'president', x_name = 'best_words')
+m = glm(president ~ best_words, data = d, family=binomial)
+
+tab_model(m)
+
+## R2 Tjur is close to 1
+gen_data <- function(b0, b1, y_name, x_name){
+  set.seed(1)
+  d = data.frame(x = runif(10000, 0,10))
+  mu = log(b0) + log(b1)*d$x
+  prob = 1 / (1 + exp(-mu))
+  d$y = rbinom(10000, 1, prob = prob)
+  colnames(d) = c(x_name, y_name)
+  d
+}
+
+d = gen_data(b0 = 0.0001, b1 = 9, y_name = 'president', x_name = 'best_words')
+m = glm(president ~ best_words, data = d, family=binomial)
+
+tab_model(m)
+
+
+
+
 
 
 
