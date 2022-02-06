@@ -58,3 +58,41 @@ m_glm2 = glm(passed_test ~ hours_studied + selftest + alcohol,
              data=d, family=binomial)
 
 tab_model(m_glm2)
+
+## When to use logistic regression
+
+plot_model(m_glm2, type='pred', grid = T)
+
+## Interpreting coefficients: odds ratios and log odds ratios
+
+log(1.49)
+exp(0.3987761)
+
+prob_to_odds <- function(p) p / (1 - p)
+odds_to_prob <- function(o) o / (1 + o)
+odds <- prob_to_odds(0.6)
+odds_with_test <- odds * 3.43
+odds_to_prob(odds_with_test)
+
+odds <- 0.1939 * 1.4904^10 * 3.4315^1 * 0.8445^7
+odds / (1 + odds)
+
+newdata <- data.frame(hours_studied = 10, selftest = 1, alcohol = 7)
+predict(m_glm2, newdata=newdata, type = 'response')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
