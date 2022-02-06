@@ -41,4 +41,20 @@ plot_model(m_glm, type='pred', show.data=T, terms='x [all]')
 
 ##Fitting and interpreting a GLM
 
+set.seed(1)
+## sample independent variables
+d = data.frame(hours_studied = rpois(n=1000, lambda=12),
+               selftest = rbinom(n=1000, size=1, prob=0.25),
+               alcohol = rpois(n=1000, lambda=10))
+## linear prediction 
+mu = -1.5 + 0.4*d$hours_studied + 1.2*d$selftest + -0.2*d$alcohol
+## transform with inverse of "logit" link
+prob = 1 / (1 + exp(-mu))
+## generate x from prediction with binomial error distribution
+d$passed_test = y = rbinom(1000, 1, prob = prob)
+head(d)
 
+m_glm2 = glm(passed_test ~ hours_studied + selftest + alcohol, 
+             data=d, family=binomial)
+
+tab_model(m_glm2)
