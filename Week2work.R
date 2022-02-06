@@ -90,7 +90,14 @@ anova(m_0, m_1, m_2, test = "Chisq")
 
 pchisq(38.253, df=1, lower.tail=F)
 
+## Pseudo R2
 
+## (we create pred and y for clarity)
+pred = m_2$fitted.values
+y = d$passed_test
+pred_0 = mean(pred[y == 0])
+pred_1 = mean(pred[y == 1])
+pred_1 - pred_0
 
 
 
