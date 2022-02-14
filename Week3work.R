@@ -36,3 +36,21 @@ ggplot(d, aes(x=Days, y=pred_m_ri, colour=Subject)) +
   geom_smooth(method=lm, se=FALSE) + # predictions 
   scale_color_brewer(palette = "Dark2") 
 
+# Multilevel model with random intercepts and random slopes
+m_rs = lmer(Reaction ~ Days + (1 + Days | Subject), data=d)
+tab_model(m_rs)
+
+d$pred_m_rs<-predict(m_rs)
+
+ggplot(d, aes(x=Days, y=pred_m_rs, colour=Subject)) + 
+  geom_point(aes(x=Days, y=Reaction),size=3) +  ## observations
+  geom_smooth(method=lm, se=FALSE) + # predictions 
+  scale_color_brewer(palette = "Dark2") 
+
+# Comparing multilevel models
+m_base = lmer(Reaction ~ (1 | Subject), data=d)
+m1 = lmer(Reaction ~ Days + (1 | Subject), data=d)
+m2 = lmer(Reaction ~ Days + (1 + Days| Subject), data=d)
+anova(m_base,m1,m2)
+
+tab_model(m_base, m1, m2)
