@@ -22,3 +22,17 @@ ggplot(d, aes(x=Days, y=Reaction, colour=Subject))+
   geom_smooth(method=lm, na.rm = TRUE, fullrange= TRUE,
               aes(group=1),colour="black", se=FALSE) +
   scale_color_brewer(palette = "Dark2")
+
+# Multilevel model with random intercepts
+m_ri = lmer(Reaction ~ Days + (1 | Subject), data=d)
+tab_model(m_ri)
+
+coef(m_ri)$Subject[4,1]
+
+d$pred_m_ri<-predict(m_ri)
+
+ggplot(d, aes(x=Days, y=pred_m_ri, colour=Subject)) + 
+  geom_point(aes(x=Days, y=Reaction),size=3) +  ## observations
+  geom_smooth(method=lm, se=FALSE) + # predictions 
+  scale_color_brewer(palette = "Dark2") 
+
