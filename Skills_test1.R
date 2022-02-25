@@ -10,7 +10,7 @@ patients <- read.csv("~/Stats2/ST1.csv")
 view(patients)
 
 # It is my intention to investigate if any of the patient variables (hospital, 
-# sex, age, duration of stay) are linked to whether the patient survives or dies.
+# sex, age, duration of stay) are linked to whether the patient dies.
 
 # plots
 locsex <- ggplot(patients, aes(x = loc, fill = sex)) +
@@ -51,18 +51,31 @@ ageloc # I wondered if any of the hospital were specialised, for example
 #convert yes/no to 0/1 in death column
 patients$death<-ifelse(patients$death=="yes",1,0)
 
-#create model 1
-m_glm1 = glm(death ~ age + sex + dur, 
+# create model 0
+m_glm0 = glm(death ~ 1, 
              data=patients, family=binomial)
 
-tab_model(m_glm1)
-
-plot_model(m_glm1, type='pred', grid = T)
-
-# create model 2
-m_glm2 = glm(death ~ loc, 
+#create model 1 + age
+m_glm1 = glm(death ~ age, 
              data=patients, family=binomial)
 
-tab_model(m_glm2)
+# create model 2 + age and sex
+m_glm2 = glm(death ~ age + sex, 
+             data=patients, family=binomial)
 
-plot_model(m_glm2, type='pred', grid = T)
+# create model 3 + age, sex, dur
+m_glm3 = glm(death ~ age + sex + dur, 
+             data=patients, family=binomial)
+
+tab_model(m_glm0, m_glm1, m_glm2, m_glm3)
+
+plot_model(m_glm3, type='pred', grid = T)
+
+#location
+m_glmL = glm(death ~ loc, 
+             data=patients, family=binomial)
+
+tab_model(m_glmL)
+
+plot_model(m_glmL, type='pred')
+
