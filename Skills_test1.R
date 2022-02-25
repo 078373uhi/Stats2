@@ -67,9 +67,23 @@ m_glm2 = glm(death ~ age + sex,
 m_glm3 = glm(death ~ age + sex + dur, 
              data=patients, family=binomial)
 
+plot_model(m_glm3, type='pred', grid = T)
+
 tab_model(m_glm0, m_glm1, m_glm2, m_glm3)
 
-plot_model(m_glm3, type='pred', grid = T)
+anova(m_glm0, m_glm1, m_glm2, m_glm3, test = "Chisq")
+
+# Model 3 (age, sex and duration of stay) has the lowest residual deviance so 
+# can be seen to have the best fit.  The p-value of 0.0054 shows that this is a 
+# significantly significant decrease on the previous model and is therefore an 
+# improvement.
+
+# look at this part again because this is not a good result
+pred = m_glm3$fitted.values
+y = patients$death
+pred_0 = mean(pred[y == 0])
+pred_1 = mean(pred[y == 1])
+pred_1 - pred_0
 
 #location
 m_glmL = glm(death ~ loc, 
@@ -78,4 +92,6 @@ m_glmL = glm(death ~ loc,
 tab_model(m_glmL)
 
 plot_model(m_glmL, type='pred')
+
+anova(m_glmL, test = "Chisq")
 
