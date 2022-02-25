@@ -42,6 +42,11 @@ ageloc # I wondered if any of the hospital were specialised, for example
 # In terms of location there are an equal amount of patients from each hospital 
 # (30) except one (Edi) which had double the number of patients than the rest.
 
+# Since the data is both binary and not normally distributed multiple linear 
+# regression is not appropriate in this case.  Logistic regression will be used
+# due to the binary response variable and independence of observations (no 
+# patient appears twice on the list).
+
 # Regression
 #convert yes/no to 0/1 in death column
 patients$death<-ifelse(patients$death=="yes",1,0)
