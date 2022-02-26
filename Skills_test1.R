@@ -14,22 +14,31 @@ view(patients)
 
 # plots to investigate data
 locsex <- ggplot(patients, aes(x = loc, fill = sex)) +
-  geom_bar()
+  geom_bar() +
+  labs(y= "Number of patients", x = "Location") +
+  ggtitle("Number of patients by hospital location")
 
 locsex
 
 dur <- ggplot(patients, aes(x = dur)) +
-  geom_bar()
+  geom_bar() +
+  labs(y= "Number of patients", x = "Duration of stay") +
+  ggtitle("Number of patients by duration of hospital stay")
 
 dur
 
 age <- ggplot(patients, aes(x = age)) +
-  geom_bar()
+  geom_bar() +
+  labs(y= "Number of patients", x = "Patient age") +
+  ggtitle("Number of patients by age")
 
 age
 
 ageloc <- ggplot(patients, aes(x = age, fill = loc)) +
-  geom_bar() 
+  geom_bar() +
+  labs(y= "Number of patients", x = "Patient age") +
+  ggtitle("Number of patients by age and hospital location") +
+  labs(fill = "Hospital location")
 
 ageloc # I wondered if any of the hospital were specialised, for example
 # a paediatric hospital or one for elderly patients, which would show patients  
@@ -67,7 +76,7 @@ m_glm2 = glm(death ~ age + sex,
 m_glm3 = glm(death ~ age + sex + dur, 
              data=patients, family=binomial)
 
-#create model 4 death + age/sex/dur/loc
+# create model 4 death + age/sex/dur/loc
 m_glm4 = glm(death ~ age + sex + dur + loc, 
              data=patients, family=binomial)
 
