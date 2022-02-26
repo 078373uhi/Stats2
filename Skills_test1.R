@@ -8,6 +8,7 @@ library(glmmTMB)
 patients <- read.csv("~/Stats2/ST1.csv")
 
 view(patients)
+summary(patients)
 
 # It is my intention to investigate if any of the patient variables (hospital, 
 # sex, age, duration of stay) are linked to patient deaths.
@@ -63,22 +64,27 @@ patients$death<-ifelse(patients$death=="yes",1,0)
 # create model 0 - deaths
 m_glm0 = glm(death ~ 1, 
              data=patients, family=binomial)
+summary(m_glm0)
 
 #create model 1 death + age
 m_glm1 = glm(death ~ age, 
              data=patients, family=binomial)
+summary(m_glm1)
 
 # create model 2 death + age/sex
 m_glm2 = glm(death ~ age + sex, 
              data=patients, family=binomial)
+summary(m_glm2)
 
 # create model 3 death + age/sex/dur
 m_glm3 = glm(death ~ age + sex + dur, 
              data=patients, family=binomial)
+summary(m_glm3)
 
 # create model 4 death + age/sex/dur/loc
 m_glm4 = glm(death ~ age + sex + dur + loc, 
              data=patients, family=binomial)
+summary(m_glm4)
 
 # plot model 4 (all variables) and create table to visualise
 plot_model(m_glm4, type='pred', grid = T)
@@ -95,17 +101,9 @@ anova(m_glm0, m_glm1, m_glm2, m_glm3, m_glm4, test = "Chisq")
 # Model 3 has a p-value of 0.0054 which is a significantly significant decrease  
 # on the previous model (model 2) and is therefore an improvement.
 
-# Pseudo R2 measure
-pred = m_glm3$fitted.values
-y = patients$death
-pred_0 = mean(pred[y == 0])
-pred_1 = mean(pred[y == 1])
-pred_1 - pred_0
+#convert to percentage
+100*(exp(coef(m_glm3))-1)
 
-# This gives a result of 0.0437.  Since this gives a measure of model fit between 
-# 0 and 1 with results close to 1 being a good fit and results close to 0 being 
-# a poor fit, this would suggest that model 3 (chosen due to its significant 
-# improvement on the previous model)is a poor fit.  This measure however is useful
-# as an indication of how well a dependent variable may be predicted and not a 
-# definite result.
-
+# Conclusion
+# Increased age has a  small impact on patient deaths while females were more likely 
+# to die than males. The biggest impact on death of a patient was length of stay.
