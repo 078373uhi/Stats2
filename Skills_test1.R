@@ -67,16 +67,23 @@ m_glm2 = glm(death ~ age + sex,
 m_glm3 = glm(death ~ age + sex + dur, 
              data=patients, family=binomial)
 
-plot_model(m_glm3, type='pred', grid = T)
+#create model 4 + all
+m_glm4 = glm(death ~ age + sex + dur + loc, 
+             data=patients, family=binomial)
 
-tab_model(m_glm0, m_glm1, m_glm2, m_glm3)
+# plot model 4 and create table
+plot_model(m_glm4, type='pred', grid = T)
 
-anova(m_glm0, m_glm1, m_glm2, m_glm3, test = "Chisq")
+tab_model(m_glm0, m_glm1, m_glm2, m_glm3, m_glm4)
 
-# Model 3 (age, sex and duration of stay) has the lowest residual deviance so 
-# can be seen to have the best fit.  The p-value of 0.0054 shows that this is a 
-# significantly significant decrease on the previous model and is therefore an 
-# improvement.
+# compare models
+anova(m_glm0, m_glm1, m_glm2, m_glm3, m_glm4, test = "Chisq")
+
+# Model 4 (age, sex and duration of stay) has the lowest residual deviance so 
+# can be seen to have the best fit.  However, the p-value of 0.8627 is not a
+# significantly significant decrease on the previous model (model 3).  Model 3
+# has a p-value of 0.0054 which is a significantly significant decrease on the 
+# previous model (model 2) and is therefore an improvement.
 
 # look at this part again because this is not a good result
 pred = m_glm3$fitted.values
