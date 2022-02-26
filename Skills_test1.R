@@ -40,7 +40,7 @@ ageloc <- ggplot(patients, aes(x = age, fill = loc)) +
   ggtitle("Number of patients by age and hospital location") +
   labs(fill = "Hospital location")
 
-ageloc # I wondered if any of the hospital were specialised, for example
+ageloc # I wondered if any of the hospitals were specialised, for example
 # a paediatric hospital or one for elderly patients, which would show patients  
 # of a particular age range but this does not seem to be the case.
 
