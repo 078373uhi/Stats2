@@ -71,3 +71,95 @@ ggraph(bigram_graph, layout = "fr") +
   geom_node_point(color = "blue") +
   geom_node_text(aes(label = name), repel = TRUE)
 
+set.seed(2)
+
+a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
+
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_void() +   # removes the border
+  theme(legend.position="none")
+
+set.seed(2)
+
+
+V(bigram_graph)$size <- degree(bigram_graph)
+
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_arc(strength = 0.2, width = 0.5, alpha = 0.15) +
+  geom_node_point(aes( size = size),color = "lightblue") +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position = "none")
+
+library(patchwork)
+
+set.seed(2)
+
+# Test different layouts 
+g1 <- ggraph(bigram_graph, layout = "mds") +
+  geom_edge_arc(strength=0.2, width=0.5, alpha=.15) + 
+  geom_node_point(aes( size = size),color = "lightblue") + 
+  theme_void() +
+  theme(legend.position = "none") + 
+  labs(title = "Multi-Dimensional Scaling")
+
+g2 <- ggraph(bigram_graph, layout = "kk") +
+  geom_edge_arc(strength=0.2, width=0.5, alpha=.15) + 
+  geom_node_point(aes( size = size),color = "lightblue") + 
+  theme_void() +
+  theme(legend.position = "none") + 
+  labs(title = "Kamada-Kawai")
+
+g3 <- ggraph(bigram_graph, layout = "lgl") +
+  geom_edge_arc(strength=0.2, width=0.5, alpha=.15) + 
+  geom_node_point(aes( size = size),color = "lightblue") + 
+  theme_void() +
+  theme(legend.position = "none") + 
+  labs(title = "Large Graph Layout") 
+
+
+g4 <- ggraph(bigram_graph, layout = "graphopt") +
+  geom_edge_arc(strength=0.2, width=0.5, alpha=.15) + 
+  geom_node_point(aes( size = size),color = "lightblue") + 
+  theme_void() +
+  theme(legend.position = "none") + 
+  labs(title = "GraphOPT")
+
+(g1 + g2) 
+(g3 + g4)
+
+#Investigating Other Texts
+vis.bigrams <- function(bigrams) {
+  set.seed(2)
+  a <- grid::arrow(type = "closed", length = unit(0.25, "cm"))
+  
+  
+  bigrams %>%
+    graph_from_data_frame() %>%
+    ggraph(layout = "fr") +
+    geom_edge_link(arrow = a,end_cap = circle(0.25, "cm")) +
+    geom_node_point(color = "lightblue", aes(size = 5)) +
+    geom_node_text(aes(label = name),repel = TRUE) +
+    theme_void() +
+    theme(legend.position = "none")
+}
+
+# load the library
+library(gutenbergr)
+
+# grab the text
+book <- tibble(text = gutenberg_download(61262)$text) 
+
+# find the bigrams
+bigram_counts <- mk.bigram(book)
+
+head(bigram_counts)
+
+# filter for most common, & visualize the bigrams
+
+bigram_counts %>%
+  filter(n > 5) %>%
+  vis.bigrams()
