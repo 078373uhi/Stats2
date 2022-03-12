@@ -254,3 +254,148 @@ sample_tweets$text  <-  gsub("[\r\n]", "", sample_tweets$text)
 sample_tweets$text  <-  gsub("[[:punct:]]", "", sample_tweets$text)
 sample_tweets$text  <-  gsub('\\p{So}|\\p{Cn}', '', sample_tweets$text, perl = TRUE)
 
+words_tweets <- sample_tweets %>%
+  select(text) %>%
+  unnest_tokens(word, text)
+
+words_tweets %>% 
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n, fill=word)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words",
+       title = "Most frequent words found in the extracted tweets") +
+  theme(legend.position = "None")
+
+# the, to, in, and etc are called 'stop-words'.  Need to remove these.
+words_tweets_ns <- words_tweets %>%
+  anti_join(stop_words)
+
+# Plot again
+words_tweets_ns %>% 
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n, fill=word)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words",
+       title = "Most frequent words found in the extracted tweets",
+       subtitle = "'Stop words' removed from the list") + 
+  theme(legend.position = "None")
+
+# Remove cop26 from word list (too many!)
+tweet_samp <- words_tweets_ns %>%
+  subset(word!="cop26") 
+
+# Plot again
+tweet_samp %>% 
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n, fill=word)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words",
+       title = "Most frequent words found in the extracted tweets",
+       subtitle = "'Stop words & COP26' removed from the list") + 
+  theme(legend.position = "None")
+
+# Word Cloud
+library(wordcloud2) 
+library(wordcloud)
+
+top_100 <- tweet_samp %>% 
+  count(word, sort = TRUE) %>%
+  top_n(100)
+
+wordcloud2(data=top_100)
+
+wordcloud(words=top_100$word, freq = top_100$n, colors = brewer.pal(8,"Dark2"))
+
+wordcloud(words=top_100$word, freq = top_100$n,colors = brewer.pal(8,"Dark2"), scale = c(2.5, 0.6))
+
+#Sentiment Analysis
+tweets_nrc <- tweet_samp %>%
+  inner_join(get_sentiments("nrc"), by = "word") 
+
+tweets_bing <- tweet_samp %>%
+  inner_join(get_sentiments("bing"), by = "word")
+
+p1 <- tweets_bing %>%
+  count(sentiment, sort = TRUE)  %>%
+  mutate(sentiment = reorder(sentiment, n)) %>%
+  ggplot(aes(x = sentiment, y = n, fill=sentiment)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words")+
+  theme(legend.position = "None")
+
+p2 <- tweets_nrc %>%
+  count(sentiment, sort = TRUE)  %>%
+  mutate(sentiment = reorder(sentiment, n)) %>%
+  ggplot(aes(x = sentiment, y = n, fill=sentiment)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words")+
+  theme(legend.position = "None")
+
+p1 / p2
+
+#Relationships
+#sample_tweets was our original data.
+
+tweet_bigrams <- sample_tweets %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+
+tweet_bigrams %>%
+  count(bigram, sort = TRUE)
+
+# reformat to have words in sep. columns
+bigrams_sep <- tweet_bigrams %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+# remove stop words
+bigrams_no_stop <- bigrams_sep %>%
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word)
+
+# count bigrams
+bigram_counts <- bigrams_no_stop %>%
+  count(word1, word2, sort=TRUE)
+
+bigram_counts
+
+library(igraph)
+library(ggraph)
+
+# plot climate change word network
+# (plotting graph edges is currently broken)
+set.seed(12)
+
+a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
+
+bigram_counts %>%
+  filter(n>10) %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_void() +   # removes the border
+  theme(legend.position="none")+
+  labs(title = "Word Network: Tweets using the hashtag - COP26",
+       subtitle = "Text mining twitter data ",
+       x = "", y = "")
