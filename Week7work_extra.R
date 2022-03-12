@@ -218,5 +218,39 @@ wiki_word_cors %>%
 #Twitter
 install.packages("rtweet")
 library(rtweet)
-install.packages("Rtools")
-library(Rtools)
+
+sample_tweets <- search_tweets(q = "#COP26 OR #cop26",   # query hashtag. Can also search for text
+                               n = 500,          # number of results
+                               include_rts = FALSE, # Don't include retweets
+                               type = "recent",  # could be 'popular',
+                               lang = "en")      # Set language to english
+
+# Write data (working with 'live' data)
+#write.csv(sample_tweets, "Data/sample_tweets.csv")
+
+
+# Create a table of users and tweet counts for the topic
+sc_name <- table(sample_tweets$screen_name)
+# NB user_id is a better option to use, as users can change user names, but not
+# their ID.
+
+# Sort the table in descending order of tweet counts
+sc_name_sort <- sort(sc_name, decreasing = TRUE)
+
+# View sorted table for top 10 users
+head(sc_name_sort, 10)
+
+# Extract tweets posted by the top user 
+
+get_top <- get_timeline("@valuestoimpact", n = 500)
+
+#Analyse Text
+#Text clean up - strip urls, @, &, punctuation, emojis
+
+sample_tweets$text <-  gsub("https\\S*", "", sample_tweets$text) 
+sample_tweets$text <-  gsub("@\\S*", "", sample_tweets$text) 
+sample_tweets$text  <-  gsub("amp", "", sample_tweets$text) 
+sample_tweets$text  <-  gsub("[\r\n]", "", sample_tweets$text)
+sample_tweets$text  <-  gsub("[[:punct:]]", "", sample_tweets$text)
+sample_tweets$text  <-  gsub('\\p{So}|\\p{Cn}', '', sample_tweets$text, perl = TRUE)
+
