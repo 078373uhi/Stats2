@@ -101,3 +101,122 @@ tidy_texts %>%
   labs(title='Word frequency for The 3 Texts',
        y = NULL, x= "word count") +
   theme(legend.position="none")
+
+bing_word_counts <- tidy_texts %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(source, word, sentiment, sort = TRUE) %>%
+  ungroup()
+
+head(bing_word_counts)
+
+bing_word_counts %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 10) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(sentiment~source, scales = "free_y") +
+  labs(x = "Contribution to Sentiment",
+       y = NULL)
+
+texts_bigrams <- texts %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+texts_bigrams
+
+# format to have words in sep. columns
+bigrams_sep <- texts_bigrams %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+# remove stop words
+bigrams_no_stop <- bigrams_sep %>%
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word)
+
+# count bigrams
+bigram_counts <- bigrams_no_stop %>%
+  count(source, word1, word2, sort=TRUE)
+
+head(bigram_counts)
+
+# convert bigrams from two columns back to one
+bigrams_united <- bigrams_no_stop %>%
+  unite(bigram, word1, word2, sep = " ")
+
+# calculate the tf-idf
+bigram_tf_idf <- bigrams_united %>%
+  count(source, bigram) %>%
+  bind_tf_idf(bigram, source, n) %>%
+  arrange(desc(tf_idf))
+
+head(bigram_tf_idf)
+
+# visualize results
+bigram_tf_idf %>%
+  arrange(desc(tf_idf)) %>%
+  group_by(source) %>%
+  slice_max(tf_idf, n = 7) %>%
+  ungroup() %>%
+  mutate(bigram = reorder(bigram, tf_idf)) %>%
+  ggplot(aes(tf_idf, bigram, fill = source)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ source,  scales = "free") +
+  labs(x = "tf-idf of bigram", y = NULL)
+
+negation_words <- c("not", "no", "never", "without")
+
+# count affected words
+negated_words <- bigrams_sep %>%
+  filter(word1 %in% negation_words) %>%
+  inner_join(get_sentiments("afinn"), by = c(word2 = "word")) %>%
+  count(source, word1, word2, value, sort = TRUE)
+
+head(negated_words)
+
+# plot affected words
+negated_words %>%
+  mutate(contribution = n * value,
+         word2 = reorder(paste(word2, word1, sep = "__"), contribution)) %>%
+  group_by(word1) %>%
+  slice_max(abs(contribution), n = 12, with_ties = FALSE) %>%
+  ggplot(aes(word2, contribution, fill = n * value > 0)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(source ~ word1, scales = "free") +
+  scale_x_discrete(labels = function(x) gsub("__.+$", "", x)) +
+  xlab("Words preceded by negation term") +
+  ylab("Sentiment value * # of occurrences") +
+  coord_flip()
+
+wiki_section_words <- texts %>%
+  filter(source == "wiki") %>%
+  mutate(section = row_number() %/% 10) %>%
+  filter(section > 0) %>%
+  unnest_tokens(word, text) %>%
+  filter(!word %in% stop_words$word)
+
+head(wiki_section_words)
+
+#Carry out pairwise count and pairwise correlation. Need package widyr
+
+library(widyr)
+# count words co-occuring within sections
+wiki_word_pairs <- wiki_section_words %>%
+  pairwise_count(word, section, sort = TRUE)
+wiki_word_pairs
+
+# we need to filter for at least relatively common words first
+wiki_word_cors <- wiki_section_words %>%
+  group_by(word) %>%
+  filter(n >= 10) %>%
+  pairwise_cor(word, section, sort = TRUE)
+wiki_word_cors
+
+#What words have a strong correlation with ‘write’
+wiki_word_cors %>%
+  filter(item1 == "write")
+
+#Twitter
+install.packages("rtweet")
+library(rtweet)
+install.packages("Rtools")
+library(Rtools)
