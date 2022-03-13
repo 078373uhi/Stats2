@@ -61,7 +61,7 @@ length(trump_nodes)
 head(trump_nodes)
 
 # create tibble from text
-trump_text <- tibble(source='bid',text = trump %>%
+trump_text <- tibble(source='tru',text = trump %>%
                        html_nodes("p") %>%
                        html_text())
 
@@ -82,6 +82,34 @@ tail(trump_text, 10)
 
 # THIRD TEXT
 obama <- read_html('https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-17')
+
+obama_nodes <- obama %>%
+  html_nodes("p")
+
+# inspect text
+length(obama_nodes)
+
+head(obama_nodes)
+
+# create tibble from text
+obama_text <- tibble(source='oba',text = obama %>%
+                       html_nodes("p") %>%
+                       html_text())
+
+# inspect tibble
+head(obama_text)
+
+tail(obama_text, 10)
+
+# remove unecessary introduction/ending lines and brackets of applause etc.
+obama_text$text <- str_remove(obama_text$text, "\\[[^\\)]+\\]")
+n <- dim(obama_text)[1] 
+obama_text <- obama_text[3:(n-6),] 
+
+# check final text
+head(obama_text)
+
+tail(obama_text, 10)
 
 # FOURTH TEXT
 bush <- read_html('https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-22')
