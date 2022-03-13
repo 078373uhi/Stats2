@@ -114,5 +114,61 @@ tail(obama_text, 10)
 # FOURTH TEXT
 bush <- read_html('https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-22')
 
+bush_nodes <- bush %>%
+  html_nodes("p")
+
+# inspect text
+length(bush_nodes)
+
+head(bush_nodes)
+
+# create tibble from text
+bush_text <- tibble(source='bus',text = bush %>%
+                       html_nodes("p") %>%
+                       html_text())
+
+# inspect tibble
+head(bush_text)
+
+tail(bush_text, 10)
+
+# remove unecessary introduction/ending lines and brackets of applause etc.
+bush_text$text <- str_remove(bush_text$text, "\\[[^\\)]+\\]")
+n <- dim(bush_text)[1] 
+bush_text <- bush_text[3:(n-6),] 
+
+# check final text
+head(bush_text)
+
+tail(bush_text, 10)
+
 # FIFTH TEXT
 clinton <- read_html('https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-12')
+
+clinton_nodes <- clinton %>%
+  html_nodes("p")
+
+# inspect text
+length(bush_nodes)
+
+head(bush_nodes)
+
+# create tibble from text
+bush_text <- tibble(source='bus',text = bush %>%
+                      html_nodes("p") %>%
+                      html_text())
+
+# inspect tibble
+head(bush_text)
+
+tail(bush_text, 10)
+
+# remove unecessary introduction/ending lines and brackets of applause etc.
+bush_text$text <- str_remove(bush_text$text, "\\[[^\\)]+\\]")
+n <- dim(bush_text)[1] 
+bush_text <- bush_text[3:(n-6),] 
+
+# check final text
+head(bush_text)
+
+tail(bush_text, 10)
