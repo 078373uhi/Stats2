@@ -392,3 +392,24 @@ bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
 # many topics though jobs, costs and families feature highly.
 
 # •	Perform sentiment analysis, making comparisons between the presidents.
+
+# add sentiments to previous text corpus
+bing_word_counts <- tidy_pres2 %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(source, word, sentiment, sort = TRUE) %>%
+  ungroup()
+
+head(bing_word_counts)
+
+bing_word_counts %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 10) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(sentiment ~ source, nrow = 2, scales = "free_y") +
+  labs(x = "Contribution to Sentiment",
+       y = NULL) +
+  theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
+
