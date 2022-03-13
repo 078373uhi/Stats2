@@ -192,6 +192,38 @@ tidy_pres %>%
   group_by(source) %>%
   count(word, sort=TRUE)
 
+# count number of words spoken by each president
+count(tidy_pres, source)
+# Biden spoke the most with 7,769 words though Clinton (7,421 words) and Obama
+# (7,238 words) were not far behind him.  Trump was next with 5,819 words while
+# Bush said the least (3,820 words).
+
+# Count unique words spoken by each President.
+tidy_pres %>%
+  filter(source == "bid") %>%
+  count(word, sort=TRUE)
+  
+tidy_pres %>%
+  filter(source == "tru") %>%
+  count(word, sort=TRUE)
+
+tidy_pres %>%
+  filter(source == "oba") %>%
+  count(word, sort=TRUE)
+
+tidy_pres %>%
+  filter(source == "bus") %>%
+  count(word, sort=TRUE)
+
+tidy_pres %>%
+  filter(source == "cli") %>%
+  count(word, sort=TRUE)
+# Biden spoke 1,853 unique words.  This is the most of all the Presidents and may  
+# be expected as he spoke the most of all the speeches. Bush said 1,238 different  
+# words.  This was the least and also correlates with him being the President 
+# that spoke the least. Obama said 1,712 unique words, Trump said 1,662 different 
+# words and Clinton said 1,631 unique words.
+
 # remove stop words and recount
 tidy_pres_ns <-  tidy_pres %>%
   anti_join(stop_words) 
@@ -267,7 +299,7 @@ cli_plot <- tidy_pres_ns %>%
 bid_plot + tru_plot + oba_plot + bus_plot + cli_plot
 
 # It is clear there are words that are very common to all the speeches  but do  
-# not add much information so I amgoing to remove these along with the other 
+# not add much information so I am going to remove these along with the other 
 # stop words
 tidy_pres2 <- tidy_pres_ns %>%
   subset(word!="people") %>%
@@ -286,11 +318,11 @@ tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill=word)) +
   geom_col() +
-  labs(title='Word frequency for the five speeches',
+  labs(title='Word frequency for the five speeches with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
-# plots by President
+# plots by President of words said 10 or more times with common/stop words removed
 # Biden plot
 bid_plot2 <- tidy_pres2 %>%
   filter(source == "bid") %>%
@@ -299,7 +331,7 @@ bid_plot2 <- tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill = word)) +
   geom_col() +
-  labs(title='Word frequency for the Biden speech',
+  labs(title='Word frequency for the Biden speech with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
@@ -311,7 +343,7 @@ tru_plot2 <- tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill = word)) +
   geom_col() +
-  labs(title='Word frequency for the Trump speech',
+  labs(title='Word frequency for the Trump speech with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
@@ -323,7 +355,7 @@ oba_plot2 <- tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill = word)) +
   geom_col() +
-  labs(title='Word frequency for the Obama speech',
+  labs(title='Word frequency for the Obama speech with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
@@ -335,7 +367,7 @@ bus_plot2 <- tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill = word)) +
   geom_col() +
-  labs(title='Word frequency for the Bush speech',
+  labs(title='Word frequency for the Bush speech with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
@@ -347,7 +379,7 @@ cli_plot2 <- tidy_pres2 %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill = word)) +
   geom_col() +
-  labs(title='Word frequency for the Clinton speech',
+  labs(title='Word frequency for the Clinton speech with common/stop words removed',
        y = NULL, x= "word count") +
   theme(legend.position="none")
 
@@ -358,3 +390,5 @@ bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
 # focused on security, terror, weapons and war.  Obama discusses jobs, business
 # and the economy while Trump does not seem to have a clear theme.  Biden covers
 # many topics though jobs, costs and families feature highly.
+
+# •	Perform sentiment analysis, making comparisons between the presidents.
