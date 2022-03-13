@@ -203,6 +203,69 @@ tidy_pres %>%
   group_by(source) %>%
   count(word, sort=TRUE)
 
+# plots
+# Biden plot
+bid_plot <- tidy_pres %>%
+  filter(source == "bid") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Biden speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Trump plot
+tru_plot <- tidy_pres %>%
+  filter(source == "tru") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Trump speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Obama plot
+oba_plot <- tidy_pres %>%
+  filter(source == "oba") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Obama speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Bush plot
+bus_plot <- tidy_pres %>%
+  filter(source == "bus") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Bush speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Clinton plot
+cli_plot <- tidy_pres %>%
+  filter(source == "cli") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Clinton speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+bid_plot + tru_plot + oba_plot + bus_plot + cli_plot
+
 # plot the count of the words by words said 25 times or more
 tidy_pres %>%
   count(word, sort = TRUE) %>%
