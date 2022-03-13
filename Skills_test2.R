@@ -193,19 +193,19 @@ tidy_pres %>%
   count(word, sort=TRUE)
 
 # remove stop words and recount
-tidy_pres <-  tidy_pres %>%
+tidy_pres_ns <-  tidy_pres %>%
   anti_join(stop_words) 
 
-tidy_pres %>%
+tidy_pres_ns %>%
   count(word, sort=TRUE)
 
-tidy_pres %>%
+tidy_pres_ns %>%
   group_by(source) %>%
   count(word, sort=TRUE)
 
 # plots
 # Biden plot
-bid_plot <- tidy_pres %>%
+bid_plot <- tidy_pres_ns %>%
   filter(source == "bid") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
@@ -217,7 +217,7 @@ bid_plot <- tidy_pres %>%
   theme(legend.position="none")
 
 # Trump plot
-tru_plot <- tidy_pres %>%
+tru_plot <- tidy_pres_ns %>%
   filter(source == "tru") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
@@ -229,7 +229,7 @@ tru_plot <- tidy_pres %>%
   theme(legend.position="none")
 
 # Obama plot
-oba_plot <- tidy_pres %>%
+oba_plot <- tidy_pres_ns %>%
   filter(source == "oba") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
@@ -241,7 +241,7 @@ oba_plot <- tidy_pres %>%
   theme(legend.position="none")
 
 # Bush plot
-bus_plot <- tidy_pres %>%
+bus_plot <- tidy_pres_ns %>%
   filter(source == "bus") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
@@ -253,7 +253,7 @@ bus_plot <- tidy_pres %>%
   theme(legend.position="none")
 
 # Clinton plot
-cli_plot <- tidy_pres %>%
+cli_plot <- tidy_pres_ns %>%
   filter(source == "cli") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
@@ -266,8 +266,20 @@ cli_plot <- tidy_pres %>%
 
 bid_plot + tru_plot + oba_plot + bus_plot + cli_plot
 
+# It is clear there are words that are very common to all the speeches so I am  
+# going to remove these along with the other stop words
+tidy_pres2 <- tidy_pres_ns %>%
+  subset(word!="people") %>%
+  subset(word!="america") %>%
+  subset(word!="american") %>%
+  subset(word!="americans")
+
+tidy_pres2 %>%
+group_by(source) %>%
+  count(word, sort=TRUE)
+
 # plot the count of the words by words said 25 times or more
-tidy_pres %>%
+tidy_pres2 %>%
   count(word, sort = TRUE) %>%
   filter(n > 25) %>%
   mutate(word = reorder(word, n)) %>%
