@@ -352,3 +352,9 @@ cli_plot2 <- tidy_pres2 %>%
   theme(legend.position="none")
 
 bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
+
+# This shows quite an interesting result with some clear themes to the speeches.
+# The Clinton speech shows themes of health, welfare and family while Bush is 
+# focused on security, terror, weapons and war.  Obama discusses jobs, business
+# and the economy while Trump does not seem to have a clear theme.  Biden covers
+# many topics though jobs, costs and families feature highly.
