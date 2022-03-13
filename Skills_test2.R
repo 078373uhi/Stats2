@@ -149,26 +149,27 @@ clinton_nodes <- clinton %>%
   html_nodes("p")
 
 # inspect text
-length(bush_nodes)
+length(clinton_nodes)
 
-head(bush_nodes)
+head(clinton_nodes)
 
 # create tibble from text
-bush_text <- tibble(source='bus',text = bush %>%
+clinton_text <- tibble(source='cli',text = clinton %>%
                       html_nodes("p") %>%
                       html_text())
 
 # inspect tibble
-head(bush_text)
+head(clinton_text)
 
-tail(bush_text, 10)
+tail(clinton_text, 10)
 
 # remove unecessary introduction/ending lines and brackets of applause etc.
-bush_text$text <- str_remove(bush_text$text, "\\[[^\\)]+\\]")
-n <- dim(bush_text)[1] 
-bush_text <- bush_text[3:(n-6),] 
+clinton_text$text <- str_remove(clinton_text$text, "\\[[^\\)]+\\]")
+n <- dim(clinton_text)[1] 
+clinton_text <- clinton_text[3:(n-6),] 
 
 # check final text
-head(bush_text)
+head(clinton_text)
 
-tail(bush_text, 10)
+tail(clinton_text, 10)
+
