@@ -173,3 +173,43 @@ head(clinton_text)
 
 tail(clinton_text, 10)
 
+# •	Mine the text (word analysis), making comparisons between the presidents
+
+# collate the texts together
+pres <- rbind(biden_text,trump_text,obama_text, bush_text, clinton_text)
+
+# tidy up the text 
+tidy_pres <- pres %>%
+  unnest_tokens(word, text)
+
+tidy_pres
+
+# count unique words then group by source (president)
+tidy_pres %>%
+  count(word, sort=TRUE)
+
+tidy_pres %>%
+  group_by(source) %>%
+  count(word, sort=TRUE)
+
+# remove stop words and recount
+tidy_pres <-  tidy_pres %>%
+  anti_join(stop_words) 
+
+tidy_pres %>%
+  count(word, sort=TRUE)
+
+tidy_pres %>%
+  group_by(source) %>%
+  count(word, sort=TRUE)
+
+# plot the count of the words by words said 25 times or more
+tidy_pres %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 25) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill=word)) +
+  geom_col() +
+  labs(title='Word frequency for the five speeches',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
