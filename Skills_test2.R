@@ -266,8 +266,9 @@ cli_plot <- tidy_pres_ns %>%
 
 bid_plot + tru_plot + oba_plot + bus_plot + cli_plot
 
-# It is clear there are words that are very common to all the speeches so I am  
-# going to remove these along with the other stop words
+# It is clear there are words that are very common to all the speeches  but do  
+# not add much information so I amgoing to remove these along with the other 
+# stop words
 tidy_pres2 <- tidy_pres_ns %>%
   subset(word!="people") %>%
   subset(word!="america") %>%
@@ -288,3 +289,66 @@ tidy_pres2 %>%
   labs(title='Word frequency for the five speeches',
        y = NULL, x= "word count") +
   theme(legend.position="none")
+
+# plots by President
+# Biden plot
+bid_plot2 <- tidy_pres2 %>%
+  filter(source == "bid") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Biden speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Trump plot
+tru_plot2 <- tidy_pres2 %>%
+  filter(source == "tru") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Trump speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Obama plot
+oba_plot2 <- tidy_pres2 %>%
+  filter(source == "oba") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Obama speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Bush plot
+bus_plot2 <- tidy_pres2 %>%
+  filter(source == "bus") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Bush speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+# Clinton plot
+cli_plot2 <- tidy_pres2 %>%
+  filter(source == "cli") %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = word)) +
+  geom_col() +
+  labs(title='Word frequency for the Clinton speech',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+
+bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
