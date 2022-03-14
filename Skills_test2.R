@@ -386,6 +386,13 @@ cli_plot2 <- tidy_pres2 %>%
 
 bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
 
+# plot a wordcloud showing the top 100 words from all the speeches together
+top_100 <- tidy_pres2 %>% 
+  count(word, sort = TRUE) %>%
+  top_n(100)
+
+wordcloud2(data=top_100)
+
 # This shows quite an interesting result with some clear themes to the speeches.
 # The Clinton speech shows themes of health, welfare and family while Bush is 
 # focused on security, terror, weapons and war.  Obama discusses jobs, business
@@ -449,13 +456,6 @@ ggplot(pres3_sentiment, aes(index, sentiment, fill = source)) +
 # positively, then turn negative before finishing positively again.  The others
 # are less obvious though Biden can be seen to be generally positive with Clinton
 # and Obama being more mixed.  This can be seen in the wordclouds below.
-
-# plot a wordcloud showing the top 100 words from all the speeches together
-top_100 <- tidy_pres2 %>% 
-  count(word, sort = TRUE) %>%
-  top_n(100)
-
-wordcloud2(data=top_100)
 
 # plot a wordcloud showing the top 100 words from all the speeches together with 
 # positive/negative analysis
