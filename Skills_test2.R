@@ -413,3 +413,7 @@ bing_word_counts %>%
        y = NULL) +
   theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
 
+# This positive/negative sentiment analysis shows results that tie in with the above 
+# word analysis. Obama highlights the recession, support and recovery while Bush 
+# brings up terror and freedom.  Clinton has crime, reform and support while Trump 
+# and Biden have less obvious themes.
