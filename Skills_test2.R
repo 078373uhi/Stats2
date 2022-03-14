@@ -174,9 +174,7 @@ head(clinton_text)
 
 tail(clinton_text, 10)
 
-# •	Mine the text (word analysis), making comparisons between the presidents
-
-# collate the texts together
+# collate the texts together into a corpus
 pres <- rbind(biden_text,trump_text,obama_text, bush_text, clinton_text)
 
 # tidy up the text 
@@ -184,6 +182,8 @@ tidy_pres <- pres %>%
   unnest_tokens(word, text)
 
 tidy_pres
+
+# •	Mine the text (word analysis), making comparisons between the presidents
 
 # count unique words then group by source (president)
 tidy_pres %>%
@@ -222,10 +222,10 @@ tidy_pres %>%
   filter(source == "Clinton") %>%
   count(word, sort=TRUE)
 # Biden spoke 1,853 unique words.  This is the most of all the Presidents and may  
-# be expected as he spoke the most of all the speeches. Bush said 1,238 different  
+# be expected as he spoke the longest of all the speeches. Bush said 1,238 different  
 # words.  This was the least and also correlates with him being the President 
-# that spoke the least. Obama said 1,712 unique words, Trump said 1,662 different 
-# words and Clinton said 1,631 unique words.
+# who spoke the shortest speech. Obama said 1,712 unique words, Trump said 1,662  
+# different words and Clinton said 1,631 unique words.
 
 # remove stop words and recount
 tidy_pres_ns <-  tidy_pres %>%
@@ -303,7 +303,7 @@ bid_plot + tru_plot + oba_plot + bus_plot + cli_plot
 
 # It is clear there are words that are very common to all the speeches  but do  
 # not add much information so I am going to remove these along with the other 
-# stop words
+# stop words: people; america; american; americans
 tidy_pres2 <- tidy_pres_ns %>%
   subset(word!="people") %>%
   subset(word!="america") %>%
@@ -316,7 +316,7 @@ group_by(source) %>%
 
 tidy_pres2_count
 
-# plot the count of the words by words said 25 times or more
+# plot the count of the words by words said 25 times or more for all speeches
 tidy_pres2 %>%
   count(word, sort = TRUE) %>%
   filter(n > 25) %>%
@@ -390,6 +390,12 @@ cli_plot2 <- tidy_pres2 %>%
 
 bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
 
+# This shows quite an interesting result with some clear themes to the speeches.
+# The Clinton speech shows themes of health, welfare and family while Bush is 
+# focused on security, terror, weapons and war.  Obama discusses jobs, business
+# and the economy while Trump does not seem to have a clear theme.  Biden covers
+# many topics though jobs, costs and families feature highly.
+
 # plot a wordcloud showing the top 100 words from all the speeches together
 top_100 <- tidy_pres2 %>% 
   count(word, sort = TRUE) %>%
@@ -397,18 +403,12 @@ top_100 <- tidy_pres2 %>%
 
 wordcloud2(data=top_100)
 
-# This shows quite an interesting result with some clear themes to the speeches.
-# The Clinton speech shows themes of health, welfare and family while Bush is 
-# focused on security, terror, weapons and war.  Obama discusses jobs, business
-# and the economy while Trump does not seem to have a clear theme.  Biden covers
-# many topics though jobs, costs and families feature highly.
-
 # Show word importance by Tf-idf weighting for all Presidents
 tidy_pres2_count %>%
   bind_tf_idf(word, source, n) %>%
   arrange(desc(tf_idf)) 
 
-# Show word importance by Tf-idf weighting for each Presidents
+# Show word importance by Tf-idf weighting for each President
 plot_importance <- tidy_pres2_count %>%
   bind_tf_idf(word, source, n) %>%
   group_by(source) %>%
@@ -422,8 +422,7 @@ ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
 # was Ryan, for Obama it was worse/stories/hated/division, for Bush it was 11th/
 # destruction and for CLinton it was crime.
 
-# plot climate change word network
-# (plotting graph edges is currently broken)
+# plot networks of words used commonly by each President
 set.seed(1)
 
 a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
@@ -619,7 +618,10 @@ cli_100_sent <- tidy_pres2 %>%
   comparison.cloud(colors = c("red", "green"),
                    max.words = 100)
 
-# Bigrams - word relationships
+# These word clouds support the findings above on the themes that each President
+# speaks about.
+
+# Bigrams - word relationships in the speeches
 # prepare the bigrams
 pres_bigrams <- pres %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
@@ -664,5 +666,20 @@ bigram_tf_idf %>%
   facet_wrap(~ source,  scales = "free") +
   labs(x = "tf-idf of bigram", y = NULL)
 
+# This shows the combination of words that each President used rated by 
+# importance level. For example Bush shows importance of mass destruction, usa 
+# freedom and economic security among other similar phrases.  Biden puts high 
+# importance on covid 19 and Ukrainian people.  Clinton and Obama are more 
+# focussed on the situation in the USA with care system, crime bill and recovery
+# act and cut taxes respectively mentioned.  Trump's important phrases are 
+# more mixed.
 
-
+# In conclusion both the word and sentiment analysis of these speeches quite clearly  
+# reflects both the national and worldwide situation at the time the speeches 
+# were made.  Biden's speech is the most recent and mentions both Covid and 
+# the war in Ukraine.  Bush is known for being President during the War on 
+# Terror and this is reflected in the analysis of his speech.  Obama's speech
+# demonstrates his work on improving health and welfare and Clinton was responsible
+# during a time of peace and economic expansion.  Trump's speech is probably the 
+# least directed of all five and this somewhat reflects his rather chaotic and 
+# controversial presidency. 
