@@ -418,9 +418,88 @@ ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
   geom_col(show.legend = FALSE) + labs(x = NULL, y = "tf-idf") +
   facet_wrap( ~ source, ncol = 5, scales = "free") + coord_flip()
 
-# This shows us that the most important word for Biden was COvid, for Trump it 
+# This shows us that the most important word for Biden was Covid, for Trump it 
 # was Ryan, for Obama it was worse/stories/hated/division, for Bush it was 11th/
 # destruction and for CLinton it was crime.
+
+# plot climate change word network
+# (plotting graph edges is currently broken)
+set.seed(1)
+
+a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
+
+bid_net <- tidy_pres2_count %>%
+  filter(n>10) %>%
+  filter(source == "Biden") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network: State of the Union Address",
+       subtitle = "President Biden",
+       x = "", y = "")
+
+tru_net <- tidy_pres2_count %>%
+  filter(n>10) %>%
+  filter(source == "Trump") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network: State of the Union Address",
+       subtitle = "President Trump",
+       x = "", y = "")
+
+oba_net <- tidy_pres2_count %>%
+  filter(n>10) %>%
+  filter(source == "Obama") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network: State of the Union Address",
+       subtitle = "President Obama",
+       x = "", y = "")
+
+bus_net <- tidy_pres2_count %>%
+  filter(n>10) %>%
+  filter(source == "Bush") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network: State of the Union Address",
+       subtitle = "President Bush",
+       x = "", y = "")
+
+cli_net <- tidy_pres2_count %>%
+  filter(n>10) %>%
+  filter(source == "Clinton") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network: State of the Union Address",
+       subtitle = "President Clinton",
+       x = "", y = "")
+
+#This shows a visualisation of words said more than 10 times by each president
+bid_net + tru_net + oba_net + bus_net + cli_net
 
 # •	Perform sentiment analysis, making comparisons between the presidents.
 
@@ -584,3 +663,6 @@ bigram_tf_idf %>%
   geom_col(show.legend = FALSE) +
   facet_wrap(~ source,  scales = "free") +
   labs(x = "tf-idf of bigram", y = NULL)
+
+
+
