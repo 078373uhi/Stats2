@@ -418,6 +418,37 @@ pos_neg_sent %>%
 # Bush brings up terror and freedom.  Clinton has crime, reform and support while  
 # Trump and Biden have less obvious themes.
 
+# Variation in overall positivity by President
+# prepare text for analysis
+tidy_pres3 <- tidy_pres2 %>%
+    mutate(
+    linenumber = row_number())
+
+head(tidy_pres3)
+
+# break text into chunks and measure positivity of each chunk
+pres3_sentiment <- tidy_pres3 %>%
+  inner_join(get_sentiments("bing"), by="word") %>%
+  count(source, index = linenumber %/% 80, sentiment) %>%
+  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %>% 
+  mutate(sentiment = positive - negative)
+# index=linenumber %/% 80, is splitting our text up into chunks of 80 lines each.
+
+head(pres3_sentiment)
+
+# plot positivity by President
+ggplot(pres3_sentiment, aes(index, sentiment, fill = source)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, scales = "free_x") +
+  labs(x = "Positivity by President",
+       y = "Scale of positive/negative") 
+
+# The pattern of positivity for Bush is quite clear.  The first half of his speech 
+# was negative and then it turned positive.  Trump's speech can be seen to start 
+# positively, then turn negative before finishing positively again.  The others
+# are less obvious though Biden can be seen to be generally positive with Clinton
+# and Obama being more mixed.
+
 # Bigrams
 pres_bigrams <- pres %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
