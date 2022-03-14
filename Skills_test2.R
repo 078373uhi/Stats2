@@ -189,9 +189,11 @@ tidy_pres
 tidy_pres %>%
   count(word, sort=TRUE)
 
-tidy_pres %>%
+tidy_pres_count <- tidy_pres %>%
   group_by(source) %>%
   count(word, sort=TRUE)
+
+tidy_pres_count
 
 # count number of words spoken by each president
 count(tidy_pres, source)
@@ -308,9 +310,11 @@ tidy_pres2 <- tidy_pres_ns %>%
   subset(word!="american") %>%
   subset(word!="americans")
 
-tidy_pres2 %>%
+tidy_pres2_count <- tidy_pres2 %>%
 group_by(source) %>%
   count(word, sort=TRUE)
+
+tidy_pres2_count
 
 # plot the count of the words by words said 25 times or more
 tidy_pres2 %>%
@@ -398,6 +402,25 @@ wordcloud2(data=top_100)
 # focused on security, terror, weapons and war.  Obama discusses jobs, business
 # and the economy while Trump does not seem to have a clear theme.  Biden covers
 # many topics though jobs, costs and families feature highly.
+
+# Show word importance by Tf-idf weighting for all Presidents
+tidy_pres2_count %>%
+  bind_tf_idf(word, source, n) %>%
+  arrange(desc(tf_idf)) 
+
+# Show word importance by Tf-idf weighting for each Presidents
+plot_importance <- tidy_pres2_count %>%
+  bind_tf_idf(word, source, n) %>%
+  group_by(source) %>%
+  top_n(10, tf_idf) %>%
+  ungroup()
+ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
+  geom_col(show.legend = FALSE) + labs(x = NULL, y = "tf-idf") +
+  facet_wrap( ~ source, ncol = 5, scales = "free") + coord_flip()
+
+# This shows us that the most important word for Biden was COvid, for Trump it 
+# was Ryan, for Obama it was worse/stories/hated/division, for Bush it was 11th/
+# destruction and for CLinton it was crime.
 
 # •	Perform sentiment analysis, making comparisons between the presidents.
 
@@ -517,7 +540,8 @@ cli_100_sent <- tidy_pres2 %>%
   comparison.cloud(colors = c("red", "green"),
                    max.words = 100)
 
-# Bigrams
+# Bigrams - word relationships
+# prepare the bigrams
 pres_bigrams <- pres %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
 pres_bigrams
@@ -526,7 +550,7 @@ pres_bigrams
 bigrams_sep <- pres_bigrams %>%
   separate(bigram, c("word1", "word2"), sep = " ")
 
-# remove stop words
+# remove stop words but not common words this time
 bigrams_no_stop <- bigrams_sep %>%
   filter(!word1 %in% stop_words$word) %>% 
   filter(!word2 %in% stop_words$word)
@@ -536,4 +560,5 @@ bigram_counts <- bigrams_no_stop %>%
   count(source, word1, word2, sort=TRUE)
 
 head(bigram_counts)
+
 
