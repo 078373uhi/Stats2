@@ -561,4 +561,26 @@ bigram_counts <- bigrams_no_stop %>%
 
 head(bigram_counts)
 
+# convert bigrams from two columns back to one
+bigrams_together <- bigrams_no_stop %>%
+  unite(bigram, word1, word2, sep = " ")
 
+# calculate the tf-idf
+bigram_tf_idf <- bigrams_together %>%
+  count(source, bigram) %>%
+  bind_tf_idf(bigram, source, n) %>%
+  arrange(desc(tf_idf))
+
+head(bigram_tf_idf)
+
+# visualize results
+bigram_tf_idf %>%
+  arrange(desc(tf_idf)) %>%
+  group_by(source) %>%
+  slice_max(tf_idf, n = 7) %>%
+  ungroup() %>%
+  mutate(bigram = reorder(bigram, tf_idf)) %>%
+  ggplot(aes(tf_idf, bigram, fill = source)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ source,  scales = "free") +
+  labs(x = "tf-idf of bigram", y = NULL)
