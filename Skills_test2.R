@@ -448,7 +448,7 @@ ggplot(pres3_sentiment, aes(index, sentiment, fill = source)) +
 # was negative and then it turned positive.  Trump's speech can be seen to start 
 # positively, then turn negative before finishing positively again.  The others
 # are less obvious though Biden can be seen to be generally positive with Clinton
-# and Obama being more mixed.
+# and Obama being more mixed.  This can be seen in the wordclouds below.
 
 # plot a wordcloud showing the top 100 words from all the speeches together
 top_100 <- tidy_pres2 %>% 
@@ -466,11 +466,56 @@ top_100_sent <- tidy_pres2 %>%
   comparison.cloud(colors = c("red", "green"),
                    max.words = 100)
 
+# Plot a wordcloud showing the top 100 words from Biden with positive/negative 
+# analysis
+bid_100_sent <- tidy_pres2 %>%
+  filter(source == "bid") %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
 
 
+# Plot a wordcloud showing the top 100 words from Trump with positive/negative 
+# analysis
+tru_100_sent <- tidy_pres2 %>%
+  filter(source == "tru") %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
 
+# Plot a wordcloud showing the top 100 words from Obama with positive/negative 
+# analysis
+oba_100_sent <- tidy_pres2 %>%
+  filter(source == "oba") %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
 
+# Plot a wordcloud showing the top 100 words from Bush with positive/negative 
+# analysis
+bus_100_sent <- tidy_pres2 %>%
+  filter(source == "bus") %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
 
+# Plot a wordcloud showing the top 100 words from Clinton with positive/negative 
+# analysis
+cli_100_sent <- tidy_pres2 %>%
+  filter(source == "cli") %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
 
 # Bigrams
 pres_bigrams <- pres %>%
