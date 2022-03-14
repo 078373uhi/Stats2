@@ -31,7 +31,7 @@ length(biden_nodes)
 head(biden_nodes)
 
 # create tibble from text
-biden_text <- tibble(source='bid',text = biden %>%
+biden_text <- tibble(source='Biden',text = biden %>%
                          html_nodes("p") %>%
                          html_text())
 
@@ -62,7 +62,7 @@ length(trump_nodes)
 head(trump_nodes)
 
 # create tibble from text
-trump_text <- tibble(source='tru',text = trump %>%
+trump_text <- tibble(source='Trump',text = trump %>%
                        html_nodes("p") %>%
                        html_text())
 
@@ -93,7 +93,7 @@ length(obama_nodes)
 head(obama_nodes)
 
 # create tibble from text
-obama_text <- tibble(source='oba',text = obama %>%
+obama_text <- tibble(source='Obama',text = obama %>%
                        html_nodes("p") %>%
                        html_text())
 
@@ -124,7 +124,7 @@ length(bush_nodes)
 head(bush_nodes)
 
 # create tibble from text
-bush_text <- tibble(source='bus',text = bush %>%
+bush_text <- tibble(source='Bush',text = bush %>%
                        html_nodes("p") %>%
                        html_text())
 
@@ -155,7 +155,7 @@ length(clinton_nodes)
 head(clinton_nodes)
 
 # create tibble from text
-clinton_text <- tibble(source='cli',text = clinton %>%
+clinton_text <- tibble(source='Clinton',text = clinton %>%
                       html_nodes("p") %>%
                       html_text())
 
@@ -201,23 +201,23 @@ count(tidy_pres, source)
 
 # Count unique words spoken by each President.
 tidy_pres %>%
-  filter(source == "bid") %>%
+  filter(source == "Biden") %>%
   count(word, sort=TRUE)
   
 tidy_pres %>%
-  filter(source == "tru") %>%
+  filter(source == "Trump") %>%
   count(word, sort=TRUE)
 
 tidy_pres %>%
-  filter(source == "oba") %>%
+  filter(source == "Obama") %>%
   count(word, sort=TRUE)
 
 tidy_pres %>%
-  filter(source == "bus") %>%
+  filter(source == "Bush") %>%
   count(word, sort=TRUE)
 
 tidy_pres %>%
-  filter(source == "cli") %>%
+  filter(source == "Clinton") %>%
   count(word, sort=TRUE)
 # Biden spoke 1,853 unique words.  This is the most of all the Presidents and may  
 # be expected as he spoke the most of all the speeches. Bush said 1,238 different  
@@ -239,7 +239,7 @@ tidy_pres_ns %>%
 # plots
 # Biden plot
 bid_plot <- tidy_pres_ns %>%
-  filter(source == "bid") %>%
+  filter(source == "Biden") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
   mutate(word = reorder(word, n)) %>%
@@ -251,7 +251,7 @@ bid_plot <- tidy_pres_ns %>%
 
 # Trump plot
 tru_plot <- tidy_pres_ns %>%
-  filter(source == "tru") %>%
+  filter(source == "Trump") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
   mutate(word = reorder(word, n)) %>%
@@ -263,7 +263,7 @@ tru_plot <- tidy_pres_ns %>%
 
 # Obama plot
 oba_plot <- tidy_pres_ns %>%
-  filter(source == "oba") %>%
+  filter(source == "Obama") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
   mutate(word = reorder(word, n)) %>%
@@ -275,7 +275,7 @@ oba_plot <- tidy_pres_ns %>%
 
 # Bush plot
 bus_plot <- tidy_pres_ns %>%
-  filter(source == "bus") %>%
+  filter(source == "Bush") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
   mutate(word = reorder(word, n)) %>%
@@ -287,7 +287,7 @@ bus_plot <- tidy_pres_ns %>%
 
 # Clinton plot
 cli_plot <- tidy_pres_ns %>%
-  filter(source == "cli") %>%
+  filter(source == "Clinton") %>%
   count(word, sort = TRUE) %>%
   filter(n > 15) %>%
   mutate(word = reorder(word, n)) %>%
@@ -326,7 +326,7 @@ tidy_pres2 %>%
 # plots by President of words said 10 or more times with common/stop words removed
 # Biden plot
 bid_plot2 <- tidy_pres2 %>%
-  filter(source == "bid") %>%
+  filter(source == "Biden") %>%
   count(word, sort = TRUE) %>%
   filter(n > 10) %>%
   mutate(word = reorder(word, n)) %>%
@@ -338,7 +338,7 @@ bid_plot2 <- tidy_pres2 %>%
 
 # Trump plot
 tru_plot2 <- tidy_pres2 %>%
-  filter(source == "tru") %>%
+  filter(source == "Trump") %>%
   count(word, sort = TRUE) %>%
   filter(n > 10) %>%
   mutate(word = reorder(word, n)) %>%
@@ -350,7 +350,7 @@ tru_plot2 <- tidy_pres2 %>%
 
 # Obama plot
 oba_plot2 <- tidy_pres2 %>%
-  filter(source == "oba") %>%
+  filter(source == "Obama") %>%
   count(word, sort = TRUE) %>%
   filter(n > 10) %>%
   mutate(word = reorder(word, n)) %>%
@@ -362,7 +362,7 @@ oba_plot2 <- tidy_pres2 %>%
 
 # Bush plot
 bus_plot2 <- tidy_pres2 %>%
-  filter(source == "bus") %>%
+  filter(source == "Bush") %>%
   count(word, sort = TRUE) %>%
   filter(n > 10) %>%
   mutate(word = reorder(word, n)) %>%
@@ -374,7 +374,7 @@ bus_plot2 <- tidy_pres2 %>%
 
 # Clinton plot
 cli_plot2 <- tidy_pres2 %>%
-  filter(source == "cli") %>%
+  filter(source == "Clinton") %>%
   count(word, sort = TRUE) %>%
   filter(n > 10) %>%
   mutate(word = reorder(word, n)) %>%
@@ -464,12 +464,12 @@ top_100_sent <- tidy_pres2 %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
   comparison.cloud(colors = c("red", "green"),
-                   max.words = 100)
+                   max.words = 100) 
 
 # Plot a wordcloud showing the top 100 words from Biden with positive/negative 
 # analysis
 bid_100_sent <- tidy_pres2 %>%
-  filter(source == "bid") %>%
+  filter(source == "Biden") %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
@@ -480,7 +480,7 @@ bid_100_sent <- tidy_pres2 %>%
 # Plot a wordcloud showing the top 100 words from Trump with positive/negative 
 # analysis
 tru_100_sent <- tidy_pres2 %>%
-  filter(source == "tru") %>%
+  filter(source == "Trump") %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
@@ -490,7 +490,7 @@ tru_100_sent <- tidy_pres2 %>%
 # Plot a wordcloud showing the top 100 words from Obama with positive/negative 
 # analysis
 oba_100_sent <- tidy_pres2 %>%
-  filter(source == "oba") %>%
+  filter(source == "Obama") %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
@@ -500,7 +500,7 @@ oba_100_sent <- tidy_pres2 %>%
 # Plot a wordcloud showing the top 100 words from Bush with positive/negative 
 # analysis
 bus_100_sent <- tidy_pres2 %>%
-  filter(source == "bus") %>%
+  filter(source == "Bush") %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
@@ -510,7 +510,7 @@ bus_100_sent <- tidy_pres2 %>%
 # Plot a wordcloud showing the top 100 words from Clinton with positive/negative 
 # analysis
 cli_100_sent <- tidy_pres2 %>%
-  filter(source == "cli") %>%
+  filter(source == "Clinton") %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
