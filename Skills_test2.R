@@ -10,6 +10,7 @@ library(wordcloud2)
 library(wordcloud)
 library(igraph)
 library(ggraph)
+library(reshape2)
 
 # •	Choose at least two different US Presidents for your analysis.
 # •	Scrape text from the website and create a corpus.
@@ -448,6 +449,28 @@ ggplot(pres3_sentiment, aes(index, sentiment, fill = source)) +
 # positively, then turn negative before finishing positively again.  The others
 # are less obvious though Biden can be seen to be generally positive with Clinton
 # and Obama being more mixed.
+
+# plot a wordcloud showing the top 100 words from all the speeches together
+top_100 <- tidy_pres2 %>% 
+  count(word, sort = TRUE) %>%
+  top_n(100)
+
+wordcloud2(data=top_100)
+
+# plot a wordcloud showing the top 100 words from all the speeches together with 
+# positive/negative analysis
+top_100_sent <- tidy_pres2 %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
+
+
+
+
+
+
 
 # Bigrams
 pres_bigrams <- pres %>%
