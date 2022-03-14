@@ -394,14 +394,14 @@ bid_plot2 + tru_plot2 + oba_plot2 + bus_plot2 + cli_plot2
 # •	Perform sentiment analysis, making comparisons between the presidents.
 
 # add sentiments to previous text corpus
-bing_word_counts <- tidy_pres2 %>%
+pos_neg_sent <- tidy_pres2 %>%
   inner_join(get_sentiments("bing"), by = "word") %>%
   count(source, word, sentiment, sort = TRUE) %>%
   ungroup()
 
-head(bing_word_counts)
+head(pos_neg_sent)
 
-bing_word_counts %>%
+pos_neg_sent %>%
   group_by(sentiment) %>%
   slice_max(n, n = 10) %>% 
   ungroup() %>%
@@ -413,7 +413,28 @@ bing_word_counts %>%
        y = NULL) +
   theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
 
-# This positive/negative sentiment analysis shows results that tie in with the above 
-# word analysis. Obama highlights the recession, support and recovery while Bush 
-# brings up terror and freedom.  Clinton has crime, reform and support while Trump 
-# and Biden have less obvious themes.
+# This positive/negative sentiment analysis shows results that tie in with the  
+# above word analysis. Obama highlights the recession, support and recovery while  
+# Bush brings up terror and freedom.  Clinton has crime, reform and support while  
+# Trump and Biden have less obvious themes.
+
+# Bigrams
+pres_bigrams <- pres %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+pres_bigrams
+
+# format to have words in separate columns
+bigrams_sep <- pres_bigrams %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+# remove stop words
+bigrams_no_stop <- bigrams_sep %>%
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word)
+
+# count bigrams
+bigram_counts <- bigrams_no_stop %>%
+  count(source, word1, word2, sort=TRUE)
+
+head(bigram_counts)
+
