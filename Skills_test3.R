@@ -65,6 +65,95 @@ plot(WS_graph,
 # 1.	What is the effect of choosing different parameters in the models?
 
 # different probablities
+# Erdös-Renyi
+# different number of nodes
+n = 10   # number of nodes
+c = 2.5     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(6) # set seed for reproducing
+# create plot of network
+n10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("Erdos-Renyi Random Graph ",   
+                      "(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+n = 20   # number of nodes
+c = 2.5     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(7) # set seed for reproducing
+# create plot of network
+n20 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("Erdos-Renyi Random Graph ",   
+                      "(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+n = 100   # number of nodes
+c = 2.5     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(8) # set seed for reproducing
+# create plot of network
+n100 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("Erdos-Renyi Random Graph ",   
+                      "(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+n10 + n20 + n100
+
+# Small world
 set.seed(3)
 n <- 20 # order of the graph
 dim <- 1 # dimension of original grid
