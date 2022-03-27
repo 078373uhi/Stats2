@@ -60,3 +60,9 @@ WS_plot <- plot(WS_graph,
      sub = glue('Starting with a ', dim , 
                 '-Dimensional Lattice \n Where Each Node Has ', nei, 
                 ' Neighbors Clockwise Originally'))
+
+# •	Use the network statistics to compare the two models, and answer the following questions:
+# 1.	What is the effect of choosing different parameters in the models?
+# 2.	How do the node degree distributions differ in the different models?
+# 3.	How does the clustering coefficient vary across the models?
+  
