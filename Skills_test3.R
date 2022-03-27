@@ -43,15 +43,15 @@ ER_plot
 set.seed(2) #set seed for reproducing
 
 n <- 20 # order of the graph
-dim <- 1 # dimension of original grid
-nei <- 4 # number of neighbors in original grid
+dim <- 1 # dimension of grid
+nei <- 4 # number of neighbors in grid
 p <- 0.3 # probability
 
 # creating an example of model
 (WS_graph <- sample_smallworld(dim, n, nei, p))
 
-#create plot of netword
-WS_plot <- plot(WS_graph, 
+#create plot of network
+plot(WS_graph, 
      layout = layout_in_circle, 
      vertex.size = 2, 
      vertex.label = NA, 
@@ -59,10 +59,84 @@ WS_plot <- plot(WS_graph,
      main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
      sub = glue('Starting with a ', dim , 
                 '-Dimensional Lattice \n Where Each Node Has ', nei, 
-                ' Neighbors Clockwise Originally'))
+                ' Neighbors Clockwise'))
 
 # •	Use the network statistics to compare the two models, and answer the following questions:
 # 1.	What is the effect of choosing different parameters in the models?
+
+# different probablities
+set.seed(3)
+n <- 20 # order of the graph
+dim <- 1 # dimension of original grid
+nei <- 4 # number of neighbors in original grid
+
+for (p in c(0, 0.2, 0.5, 0.6, 0.9, 1)) {
+  # creating an example of G(n, p) model
+  sw_graph <- sample_smallworld(dim, n, nei, p)
+  
+  plot(sw_graph, 
+       layout = layout_in_circle, 
+       vertex.size = 2, 
+       vertex.label = NA, 
+       edge.lty = 3,
+       main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
+       sub = glue('Starting with a ', dim , 
+                  '-Dimensional Lattice \n Where Each Node Has ', nei, 
+                  ' Neighbors Clockwise Originally'))
+  
+  writeLines('\n')
+  
+}
+
+# different neighbours
+set.seed(4)
+n <- 20 # order of the graph
+dim <- 1 # dimension of original grid
+p <- 0.5 # probability
+
+for (nei in c(0, 2, 5, 10)) {
+  # creating an example of G(n, p) model
+  sw_graph <- sample_smallworld(dim, n, nei, p)
+  
+  plot(sw_graph, 
+       layout = layout_in_circle, 
+       vertex.size = 2, 
+       vertex.label = NA, 
+       edge.lty = 3,
+       main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
+       sub = glue('Starting with a ', dim , 
+                  '-Dimensional Lattice \n Where Each Node Has ', nei, 
+                  ' Neighbors Clockwise Originally'))
+  
+  writeLines('\n')
+  
+}
+
+# different number nodes
+set.seed(5)
+nei <- 3 # order of the graph
+dim <- 1 # dimension of original grid
+p <- 0.5 # probability
+
+for (n in c(2, 5, 10, 15, 20)) {
+  # creating an example of G(n, p) model
+  sw_graph <- sample_smallworld(dim, n, nei, p)
+  
+  plot(sw_graph, 
+       layout = layout_in_circle, 
+       vertex.size = 2, 
+       vertex.label = NA, 
+       edge.lty = 3,
+       main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
+       sub = glue('Starting with a ', dim , 
+                  '-Dimensional Lattice \n Where Each Node Has ', nei, 
+                  ' Neighbors Clockwise Originally'))
+  
+  writeLines('\n')
+  
+}
+
+
 # 2.	How do the node degree distributions differ in the different models?
 # 3.	How does the clustering coefficient vary across the models?
   
