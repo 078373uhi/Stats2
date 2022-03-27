@@ -4,6 +4,7 @@ library(igraph)
 library(tidygraph)
 library(dplyr)
 library(patchwork)
+library(glue)
 
 
 # •	Simulate networks using two different models: 
@@ -26,7 +27,8 @@ adj_mat <- adj + t(adj) # calculate the transpose
 
 (ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
 
-set.seed(1)
+set.seed(1) # set seed for reproducing
+# create plot of network
 ER_plot <- ggraph(ErdosRenyi_graph, layout = "fr") +
   geom_edge_link(color = "grey", alpha = 0.7) + 
   geom_node_point(colour = "lightblue", size = 5, 
@@ -38,3 +40,23 @@ ER_plot <- ggraph(ErdosRenyi_graph, layout = "fr") +
 ER_plot
 
 # 2.	Watts-Strogatz graph (small world)
+set.seed(2) #set seed for reproducing
+
+n <- 20 # order of the graph
+dim <- 1 # dimension of original grid
+nei <- 4 # number of neighbors in original grid
+p <- 0.3 # probability
+
+# creating an example of model
+(WS_graph <- sample_smallworld(dim, n, nei, p))
+
+#create plot of netword
+WS_plot <- plot(WS_graph, 
+     layout = layout_in_circle, 
+     vertex.size = 2, 
+     vertex.label = NA, 
+     edge.lty = 3,
+     main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
+     sub = glue('Starting with a ', dim , 
+                '-Dimensional Lattice \n Where Each Node Has ', nei, 
+                ' Neighbors Clockwise Originally'))
