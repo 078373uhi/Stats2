@@ -203,3 +203,46 @@ g1 +      labs(title = paste0("Erdos-Renyi Random Graph ",
                               "(n = ", n, 
                               ", p = ", p, ")")) +
   g2 + g3 
+
+# Small World
+set.seed(42)
+# the order of the graph
+n <- 10
+# the dimension of the original grid
+dim <- 1
+# the number of neighbors in the original grid
+nei <- 3 
+
+# the probability
+p <- 0.8
+
+# creating an example of G(n, p) model (as we did for the earlier models)
+(sw_graph <- sample_smallworld(dim, n, nei, p))
+
+library(glue)
+set.seed(42)
+# the order of the graph
+n <- 10
+# the dimension of the original grid
+dim <- 1
+# the number of neighbors in the original grid
+nei <- 3 
+
+for (p in c(0, 0.1, 0.5, 0.9,  1)) {
+  # creating an example of G(n, p) model
+  sw_graph <- sample_smallworld(dim, n, nei, p)
+  
+  plot(sw_graph, 
+       layout = layout_in_circle, 
+       vertex.size = 2, 
+       vertex.label = NA, 
+       edge.lty = 3,
+       main = glue('Watts-Strogatz on ', n, ' Nodes and Probability ', p),
+       sub = glue('Starting with a ', dim , 
+                  '-Dimensional Lattice \n Where Each Node Has ', nei, 
+                  ' Neighbors Clockwise Originally'))
+  
+  writeLines('\n')
+  
+}
+
