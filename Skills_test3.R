@@ -410,3 +410,18 @@ cluster_walktrap(giantWS)
 # Erdos-Renyi model and 4 groups in the Watts-Strogatz model.
 cluster_edge_betweenness(giantER)
 cluster_edge_betweenness(giantWS)
+
+# find the core and periphery of the network using k-core decmposition
+coreness(ErdosRenyi_graph)
+coreness(WS_graph)
+
+# this shows the core of the network and the periphery, in order, for the   
+# Erdos-Renyi model
+which(coreness(ErdosRenyi_graph)== 16)
+which(coreness(ErdosRenyi_graph)== 12)
+
+# this shows the core of the network and the periphery, in order, for the   
+# Watts-Strogatz model
+which(coreness(WS_graph)== 6)
+which(coreness(WS_graph)== 5)
+
