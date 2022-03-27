@@ -369,4 +369,44 @@ WS_plot <- WS_tdy %>%
 ER_plot + WS_plot
 
 # 3.	How does the clustering coefficient vary across the models?
-  
+components(ErdosRenyi_graph)
+components(WS_graph)
+
+# prepare for plot
+set.seed(12)
+ercomp <- components(ErdosRenyi_graph)
+
+# create plot
+er_plot2 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link() +
+  geom_node_point(color = "lightblue",size = 5) +
+  theme_void() +
+  labs(title = "Erdos-Renyi cluster plot")
+
+# prepare for plot
+set.seed(13)
+wscomp <- components(WS_graph)
+
+# create plot
+ws_plot2 <- ggraph(WS_graph, layout = "fr") +
+  geom_edge_link() +
+  geom_node_point(color = "lightblue",size = 5) +
+  theme_void() +
+  labs(title = "Watts-Strogatz cluster plot")
+
+# view plots
+er_plot2 + ws_plot2
+
+# These are directed networks so are strongly connected
+giantER <- decompose(ErdosRenyi_graph)[[1]]
+giantWS <- decompose(WS_graph)[[1]]
+
+# this finds communities through a series of short random walks.  It has identified
+# 2 groups in the Erdos-Renyi model and 3 groups in the Watts-Strogatz model.
+cluster_walktrap(giantER)
+cluster_walktrap(giantWS)
+
+# this has measured betweenness applied to edges.  It produced 10 groups for the 
+# Erdos-Renyi model and 4 groups in the Watts-Strogatz model.
+cluster_edge_betweenness(giantER)
+cluster_edge_betweenness(giantWS)
