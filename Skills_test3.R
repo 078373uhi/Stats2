@@ -10,7 +10,7 @@ library(glue)
 # •	Simulate networks using two different models: 
 # 1.	Erdös-Renyi graph G(n,p)
 
-n = 50   # number of nodes
+n = 20   # number of nodes
 c = 2.5     # average degree
 p = c/n   #connection probability
 
@@ -96,7 +96,7 @@ n10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
                       ", p = ", p, ")"))
 
 # model with 20 nodes
-n = 20   # number of nodes
+n = 50   # number of nodes
 c = 2.5     # average degree
 p = c/n   #connection probability
 
@@ -115,7 +115,7 @@ adj_mat <- adj + t(adj) # calculate the transpose
 
 set.seed(7) # set seed for reproducing
 # create plot of network
-n20 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+n50 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   geom_edge_link(color = "grey", alpha = 0.7) + 
   geom_node_point(colour = "lightblue", size = 5, 
                   show.legend = FALSE) +
@@ -150,7 +150,7 @@ n100 <- ggraph(ErdosRenyi_graph, layout = "fr") +
                       ", p = ", p, ")"))
 
 # display plots
-n10 + n20 + n100
+n10 + n50 + n100
 
 
 # different average degree/probability
@@ -312,7 +312,61 @@ for (n in c(2, 5, 10, 15, 20)) {
   
 }
 
-
 # 2.	How do the node degree distributions differ in the different models?
+# this shows the indegree (incoming edges) of each model
+sort(degree(ErdosRenyi_graph, mode="in"))
+sort(degree(WS_graph, mode="in"))
+
+# this shows the outdegree (outgoing edges) of each model
+sort(degree(ErdosRenyi_graph, mode="out"))
+sort(degree(WS_graph, mode="out"))
+
+# this shows the total degree of each model. It can be seen that the Erdös-Renyi  
+# model has more than the Watts-Strogatz.  
+sort(degree(ErdosRenyi_graph, mode="total"))
+sort(degree(WS_graph, mode="total"))
+
+# this shows the closeness, or how many steps are needed to access all other nodes
+# from any particular node. The values are similar for each model though the 
+# values for the Erdös-Renyi model are slightly higher.  Higher values mean nodes
+# are more spread out.
+sort(closeness(ErdosRenyi_graph, normalized=TRUE))
+sort(closeness(WS_graph, normalized=TRUE))
+
+# this shows betweenness or the number of shortest paths between nodes.  The 
+# Watts-Strogatz model shows shorter paths.
+sort(betweenness(ErdosRenyi_graph))
+sort(betweenness(WS_graph))
+
+# plots of centrality
+ErdosRenyi_tdy <- as_tbl_graph(ErdosRenyi_graph)
+ER_plot <- ErdosRenyi_tdy %>% 
+  activate(nodes) %>%
+  mutate(pagerank = centrality_pagerank()) %>%
+  activate(edges) %>%
+  mutate(betweenness = centrality_edge_betweenness()) %>%
+  ggraph() +
+  geom_edge_link(aes(alpha = betweenness)) +
+  geom_node_point(aes(size = pagerank, colour = pagerank)) +
+  # discrete colour legend
+  scale_color_gradient(guide = 'legend') +
+  labs(title = "Erdos-Renyi centrality plot")
+
+WS_tdy <- as_tbl_graph(WS_graph)
+WS_plot <- WS_tdy %>% 
+  activate(nodes) %>%
+  mutate(pagerank = centrality_pagerank()) %>%
+  activate(edges) %>%
+  mutate(betweenness = centrality_edge_betweenness()) %>%
+  ggraph() +
+  geom_edge_link(aes(alpha = betweenness)) +
+  geom_node_point(aes(size = pagerank, colour = pagerank)) +
+  # discrete colour legend
+  scale_color_gradient(guide = 'legend') +
+  labs(title = "Watts-Strogatz centrality plot")
+
+# compare centrality plots
+ER_plot + WS_plot
+
 # 3.	How does the clustering coefficient vary across the models?
   
