@@ -64,7 +64,7 @@ plot(WS_graph,
 # •	Use the network statistics to compare the two models, and answer the following questions:
 # 1.	What is the effect of choosing different parameters in the models?
 
-# different probablities
+
 # Erdös-Renyi
 # different number of nodes
 n = 10   # number of nodes
@@ -90,7 +90,7 @@ n10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   geom_edge_link(color = "grey", alpha = 0.7) + 
   geom_node_point(colour = "lightblue", size = 5, 
                   show.legend = FALSE) +
-  labs(title = paste0("Erdos-Renyi Random Graph ",   
+  labs(title = paste0("Erdos-Renyi Graphs ",   
                       "(n = ", n, 
                       ", p = ", p, ")"))
 
@@ -118,8 +118,7 @@ n20 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   geom_edge_link(color = "grey", alpha = 0.7) + 
   geom_node_point(colour = "lightblue", size = 5, 
                   show.legend = FALSE) +
-  labs(title = paste0("Erdos-Renyi Random Graph ",   
-                      "(n = ", n, 
+  labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
 
@@ -146,14 +145,123 @@ n100 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   geom_edge_link(color = "grey", alpha = 0.7) + 
   geom_node_point(colour = "lightblue", size = 5, 
                   show.legend = FALSE) +
-  labs(title = paste0("Erdos-Renyi Random Graph ",   
-                      "(n = ", n, 
+  labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
 
 n10 + n20 + n100
 
+
+# different average degree/probability
+n = 20   # number of nodes
+c = 1     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(9) # set seed for reproducing
+# create plot of network
+c1 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("Erdos-Renyi Graphs ",   
+                      "(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+n = 20   # number of nodes
+c = 5     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(10) # set seed for reproducing
+# create plot of network
+c5 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+n = 20   # number of nodes
+c = 10     # average degree
+p = c/n   #connection probability
+
+adj = matrix(0, n, n)     # create adjacency matrix
+
+for(.i in 2:n){
+  for(.j in 1:(.i-1)){    
+    adj[.i, .j] = rbinom(1,1, p) 
+    
+  }
+}
+
+adj_mat <- adj + t(adj) # calculate the transpose
+
+(ErdosRenyi_graph = graph_from_adjacency_matrix(adj_mat))
+
+set.seed(11) # set seed for reproducing
+# create plot of network
+c10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
+  geom_edge_link(color = "grey", alpha = 0.7) + 
+  geom_node_point(colour = "lightblue", size = 5, 
+                  show.legend = FALSE) +
+  labs(title = paste0("(n = ", n, 
+                      ", p = ", p, ")"))
+
+
+c1 + c5 + c10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Small world
+# different probablities
 set.seed(3)
 n <- 20 # order of the graph
 dim <- 1 # dimension of original grid
