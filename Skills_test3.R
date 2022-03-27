@@ -67,6 +67,7 @@ plot(WS_graph,
 
 # Erdös-Renyi
 # different number of nodes
+# model with 10 nodes
 n = 10   # number of nodes
 c = 2.5     # average degree
 p = c/n   #connection probability
@@ -94,7 +95,7 @@ n10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
                       "(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# model with 20 nodes
 n = 20   # number of nodes
 c = 2.5     # average degree
 p = c/n   #connection probability
@@ -121,7 +122,7 @@ n20 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# model with 100 nodes
 n = 100   # number of nodes
 c = 2.5     # average degree
 p = c/n   #connection probability
@@ -148,11 +149,12 @@ n100 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# display plots
 n10 + n20 + n100
 
 
 # different average degree/probability
+# model with average 1 degree
 n = 20   # number of nodes
 c = 1     # average degree
 p = c/n   #connection probability
@@ -180,7 +182,7 @@ c1 <- ggraph(ErdosRenyi_graph, layout = "fr") +
                       "(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# model with average 5 degrees
 n = 20   # number of nodes
 c = 5     # average degree
 p = c/n   #connection probability
@@ -207,7 +209,7 @@ c5 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# model with average 10 degrees
 n = 20   # number of nodes
 c = 10     # average degree
 p = c/n   #connection probability
@@ -234,31 +236,8 @@ c10 <- ggraph(ErdosRenyi_graph, layout = "fr") +
   labs(title = paste0("(n = ", n, 
                       ", p = ", p, ")"))
 
-
+# display plots
 c1 + c5 + c10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Small world
 # different probablities
@@ -268,7 +247,7 @@ dim <- 1 # dimension of original grid
 nei <- 4 # number of neighbors in original grid
 
 for (p in c(0, 0.2, 0.5, 0.6, 0.9, 1)) {
-  # creating an example of G(n, p) model
+  # creating model
   sw_graph <- sample_smallworld(dim, n, nei, p)
   
   plot(sw_graph, 
@@ -292,7 +271,7 @@ dim <- 1 # dimension of original grid
 p <- 0.5 # probability
 
 for (nei in c(0, 2, 5, 10)) {
-  # creating an example of G(n, p) model
+  # creating model
   sw_graph <- sample_smallworld(dim, n, nei, p)
   
   plot(sw_graph, 
@@ -316,7 +295,7 @@ dim <- 1 # dimension of original grid
 p <- 0.5 # probability
 
 for (n in c(2, 5, 10, 15, 20)) {
-  # creating an example of G(n, p) model
+  # creating model
   sw_graph <- sample_smallworld(dim, n, nei, p)
   
   plot(sw_graph, 
