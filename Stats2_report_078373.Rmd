@@ -11,13 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r setup, include=FALSE}
 # Install packages
-
+library(tidyverse)
+library(tidytext)
+library(gutenbergr)
 ```
 
 ```{r setup, include=FALSE}
 # Read in data
 read.csv("navy_comms.csv")
 read.csv("navy_extra.csv")
+
+# load in texts
+navybook <- gutenberg_download(41677)$text 
 
 ```
 
