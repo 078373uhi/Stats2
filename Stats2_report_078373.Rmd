@@ -23,7 +23,13 @@ read.csv("navy_comms.csv")
 read.csv("navy_extra.csv")
 
 # load in texts
-battle <- gutenberg_download(54441)$text 
+battle <- gutenberg_download(54441, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
+navybook <- gutenberg_download(41677, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
+flag <- gutenberg_download(19849, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
+
+battle
+navybook
+flag
 
 ```
 
