@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Install packages
 library(tidyverse)
 library(tidytext)
+install.packages("gutenbergr")
 library(gutenbergr)
 ```
 
@@ -22,7 +23,7 @@ read.csv("navy_comms.csv")
 read.csv("navy_extra.csv")
 
 # load in texts
-navybook <- gutenberg_download(41677)$text 
+battle <- gutenberg_download(54441)$text 
 
 ```
 
