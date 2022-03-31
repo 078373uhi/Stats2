@@ -15,6 +15,7 @@ library(tidyverse)
 library(tidytext)
 install.packages("gutenbergr")
 library(gutenbergr)
+library(dplyr)
 ```
 
 ```{r setup, include=FALSE}
@@ -23,13 +24,21 @@ read.csv("navy_comms.csv")
 read.csv("navy_extra.csv")
 
 # load in texts
-battle <- gutenberg_download(54441, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
+
 navybook <- gutenberg_download(41677, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
 flag <- gutenberg_download(19849, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
 
+
 battle
-navybook
-flag
+
+battle <- read_lines("https://www.gutenberg.org/files/54441/54441-0.txt", skip = 214)
+head(battle, 10)
+
+navybook <- read_lines("https://www.gutenberg.org/cache/epub/41677/pg41677.txt", skip = 264)
+head(navybook, 10)
+
+flag <- read_lines("https://www.gutenberg.org/cache/epub/19849/pg19849.txt", skip = 426)
+head(flag, 10)
 
 ```
 
