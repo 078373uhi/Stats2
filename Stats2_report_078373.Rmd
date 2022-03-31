@@ -24,21 +24,38 @@ read.csv("navy_comms.csv")
 read.csv("navy_extra.csv")
 
 # load in texts
-
-navybook <- gutenberg_download(41677, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
-flag <- gutenberg_download(19849, mirror = "http://mirrors.xmission.com/gutenberg/")$text 
-
-
-battle
-
 battle <- read_lines("https://www.gutenberg.org/files/54441/54441-0.txt", skip = 214)
 head(battle, 10)
+
+battle_txt <- tibble(text=battle)
+head(battle_txt)
+
+tidy_battle <- battle_txt %>%
+  unnest_tokens(word, text)
+
+tidy_battle
 
 navybook <- read_lines("https://www.gutenberg.org/cache/epub/41677/pg41677.txt", skip = 264)
 head(navybook, 10)
 
+navybook_txt <- tibble(text=navybook)
+head(navybook_txt)
+
+tidy_navy <- navybook_txt %>%
+  unnest_tokens(word, text)
+
+tidy_navy
+
 flag <- read_lines("https://www.gutenberg.org/cache/epub/19849/pg19849.txt", skip = 426)
 head(flag, 10)
+
+flag_txt <- tibble(text=flag)
+head(flag_txt)
+
+tidy_flag <- flag_txt %>%
+  unnest_tokens(word, text)
+
+tidy_flag
 
 ```
 
