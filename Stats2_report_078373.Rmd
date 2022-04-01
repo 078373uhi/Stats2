@@ -16,6 +16,7 @@ library(tidytext)
 install.packages("gutenbergr")
 library(gutenbergr)
 library(dplyr)
+library(ggplot2)
 ```
 
 ```{r setup, include=FALSE}
@@ -85,17 +86,52 @@ You can also embed plots, for example:
 ```{r countbattle, echo=FALSE}
 tidy_battle %>%
   count(word, sort=TRUE)
+
 ```
+
+```{r plotbattle, echo=FALSE}
+tidy_battle %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 100) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill=word)) +
+  geom_col() +
+  labs(title='Word frequency for The British Navy in Battle',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+```
+
 ```{r countnavy}
 tidy_navy %>%
   count(word, sort=TRUE)
 ```
-
+```{r plotnavy, echo=FALSE}
+tidy_navy %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 75) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill=word)) +
+  geom_col() +
+  labs(title='Word frequency for The British Navy Book',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+```
 ```{r countflag}
 tidy_flag %>%
   count(word, sort=TRUE)
 ```
 
+```{r plotflag, echo=FALSE}
+tidy_flag %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 75) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill=word)) +
+  geom_col() +
+  labs(title='Word frequency for Flag and Fleet: How the British Navy Won the Freedom of the Seas',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+```
 
 
 
