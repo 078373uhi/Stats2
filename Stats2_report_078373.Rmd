@@ -17,6 +17,8 @@ install.packages("gutenbergr")
 library(gutenbergr)
 library(dplyr)
 library(ggplot2)
+library(wordcloud2)
+library(viridisLite)
 ```
 
 ```{r setup, include=FALSE}
@@ -133,11 +135,32 @@ tidy_flag %>%
   theme(legend.position="none")
 ```
 
+```{r cloudbattle}
+colour_pal <- turbo(n=100)
 
+wc_data <- tidy_battle %>%
+  count(word)  %>%
+  filter(n > 10)   # only include words that appear more than ten times
+wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
+```
 
+```{r cloudnavy}
+colour_pal <- turbo(n=100)
 
+wc_data <- tidy_navy %>%
+  count(word)  %>%
+  filter(n > 10)   # only include words that appear more than ten times
+wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
+```
 
+```{r cloudflag}
+colour_pal <- turbo(n=100)
 
+wc_data <- tidy_flag %>%
+  count(word)  %>%
+  filter(n > 10)   # only include words that appear more than ten times
+wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
+```
 
 
 
