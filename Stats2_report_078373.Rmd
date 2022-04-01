@@ -65,6 +65,33 @@ tidy_BN <- tidy_BN %>%
   anti_join(stop_words)
 ```
 
+```{r countBN, echo=FALSE}
+tidy_BN %>%
+  count(word, sort=TRUE)
+
+```
+
+
+```{r plotBN, echo=FALSE}
+tidy_BN %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 200) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill=word)) +
+  geom_col() +
+  labs(title='Word frequency for The British Navy in Battle',
+       y = NULL, x= "word count") +
+  theme(legend.position="none")
+```
+
+```{r cloudBN}
+colour_pal <- turbo(n=100)
+
+wc_data <- tidy_BN %>%
+  count(word)  %>%
+  filter(n > 100)   # only include words that appear more than ten times
+wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
+```
 
 
 ## R Markdown
