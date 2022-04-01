@@ -67,32 +67,45 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
+```{r tidy, include=FALSE}
 tidy_battle <-  tidy_battle %>%
   anti_join(stop_words) 
-
-tidy_battle %>%
-  count(word, sort=TRUE)
 
 tidy_navy <-  tidy_navy %>%
   anti_join(stop_words) 
 
-tidy_navy %>%
-  count(word, sort=TRUE)
-
 tidy_flag <-  tidy_flag %>%
   anti_join(stop_words) 
-
-tidy_flag %>%
-  count(word, sort=TRUE)
 ```
 
 ## Including Plots
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r countbattle, echo=FALSE}
+tidy_battle %>%
+  count(word, sort=TRUE)
+```
+```{r countnavy}
+tidy_navy %>%
+  count(word, sort=TRUE)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r countflag}
+tidy_flag %>%
+  count(word, sort=TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
