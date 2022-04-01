@@ -19,6 +19,14 @@ library(dplyr)
 library(ggplot2)
 library(wordcloud2)
 library(viridisLite)
+library(rvest)
+library(patchwork)
+library(stringr)
+library(widyr)
+library(wordcloud)
+library(igraph)
+library(ggraph)
+library(reshape2)
 ```
 
 ```{r setup, include=FALSE}
@@ -30,36 +38,31 @@ read.csv("navy_extra.csv")
 battle <- read_lines("https://www.gutenberg.org/files/54441/54441-0.txt", skip = 214)
 head(battle, 10)
 
-battle_txt <- tibble(text=battle)
-head(battle_txt)
-
-tidy_battle <- battle_txt %>%
-  unnest_tokens(word, text)
-
-tidy_battle
+battle_text <- tibble(source='Battle',text = battle)
+head(battle_text)
 
 navybook <- read_lines("https://www.gutenberg.org/cache/epub/41677/pg41677.txt", skip = 264)
 head(navybook, 10)
 
-navybook_txt <- tibble(text=navybook)
-head(navybook_txt)
-
-tidy_navy <- navybook_txt %>%
-  unnest_tokens(word, text)
-
-tidy_navy
+navy_text <- tibble(source='Navy',text = navybook)
+head(navy_text)
 
 flag <- read_lines("https://www.gutenberg.org/cache/epub/19849/pg19849.txt", skip = 426)
 head(flag, 10)
 
-flag_txt <- tibble(text=flag)
-head(flag_txt)
+flag_text <- tibble(source='Flag',text = flag)
+head(flag_text)
 
-tidy_flag <- flag_txt %>%
+# collate the texts together into a corpus
+BritNavy <- rbind(battle_text, navy_text, flag_text)
+
+# tidy up the text 
+tidy_BN <- BritNavy %>%
   unnest_tokens(word, text)
 
-tidy_flag
-
+# remove stop words
+tidy_BN <- tidy_BN %>%
+  anti_join(stop_words)
 ```
 
 
@@ -70,16 +73,6 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r tidy, include=FALSE}
-tidy_battle <-  tidy_battle %>%
-  anti_join(stop_words) 
-
-tidy_navy <-  tidy_navy %>%
-  anti_join(stop_words) 
-
-tidy_flag <-  tidy_flag %>%
-  anti_join(stop_words) 
-```
 
 ## Including Plots
 
