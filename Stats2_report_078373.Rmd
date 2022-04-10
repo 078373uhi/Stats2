@@ -275,6 +275,32 @@ sent %>%
   theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
 ```
 
+```{r positivity}
+# Variation in overall positivity by book
+# prepare text for analysis
+tidy_BN2 <- tidy_BN %>%
+    mutate(
+    linenumber = row_number())
+
+head(tidy_BN2)
+
+# break text into chunks and measure positivity of each chunk
+sentiment <- tidy_BN2 %>%
+  inner_join(get_sentiments("bing"), by="word") %>%
+  count(source, index = linenumber %/% 1000, sentiment) %>%
+  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %>% 
+  mutate(sentiment = positive - negative)
+# index=linenumber %/% 1000, is splitting our text up into chunks of 1000 lines each.
+
+head(sentiment)
+
+# plot positivity by book
+ggplot(sentiment, aes(index, sentiment, fill = source)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~source, scales = "free_x") +
+  labs(x = "Positivity by book",
+       y = "Scale of positive/negative") 
+```
 
 
 
