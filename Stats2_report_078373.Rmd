@@ -179,6 +179,60 @@ plot_flag <- tidy_BN %>%
 plot_battle + plot_navy + plot_flag
 ```
 
+# Show word importance by Tf-idf weighting for all Presidents
+tidy_pres2_count %>%
+  bind_tf_idf(word, source, n) %>%
+  arrange(desc(tf_idf)) 
+
+```{r import}
+# Show word importance by Tf-idf weighting for all books
+tidy_BN_count %>%
+  bind_tf_idf(word, source, n) %>%
+  arrange(desc(tf_idf)) 
+```
+
+```{r importplot}
+# Show word importance by Tf-idf weighting for each book
+plot_importance <- tidy_BN_count %>%
+  bind_tf_idf(word, source, n) %>%
+  group_by(source) %>%
+  top_n(10, tf_idf) %>%
+  ungroup()
+ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
+  geom_col(show.legend = FALSE) + labs(x = NULL, y = "tf-idf") +
+  facet_wrap( ~ source, ncol = 5, scales = "free") + coord_flip()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r countnavy}
 tidy_navy %>%
