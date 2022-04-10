@@ -83,6 +83,52 @@ tidy_BN_count
 
 ```
 
+# count number of words spoken by each president
+
+
+```{r countbook}
+#count words then group by source (book)
+count(tidy_BN, source)
+
+```
+
+```{r countuniq}
+#count words then group by source (book)
+count(tidy_BN, source)
+
+#count unique words per book
+
+tidy_BN %>%
+  filter(source == "Battle") %>%
+  count(word, sort=TRUE)
+
+tidy_BN %>%
+  filter(source == "Navy") %>%
+  count(word, sort=TRUE)
+
+tidy_BN %>%
+  filter(source == "Flag") %>%
+  count(word, sort=TRUE)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r plotBN, echo=FALSE}
 tidy_BN %>%
