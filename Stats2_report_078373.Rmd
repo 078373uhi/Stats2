@@ -69,6 +69,8 @@ tidy_BN <- tidy_BN %>%
 tidy_BN
 
 ```
+## Books
+Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.
 
 ```{r countBN, echo=FALSE}
 #count unique words then group by source (book)
@@ -83,7 +85,9 @@ tidy_BN_count
 
 ```
 
-# count number of words spoken by each president
+## Word Count
+
+The British Navy Book is the book with the most words (41,909) followed by The British Navy in Battle (40,616) and Flag and Fleet has the least by quite a lot (32,834).  When looking at unique words used this is reflected too: The British Navy Book uses 9,901 unique words; The British Navy in Battle uses 7,182; and Flag and Fleet uses 6,803. 
 
 
 ```{r countbook}
