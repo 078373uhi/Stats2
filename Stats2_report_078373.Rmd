@@ -65,9 +65,21 @@ tidy_BN <- tidy_BN %>%
   anti_join(stop_words)
 ```
 
+```{r showBN, include=FALSE}
+tidy_BN
+
+```
+
 ```{r countBN, echo=FALSE}
+#count unique words then group by source (book)
 tidy_BN %>%
   count(word, sort=TRUE)
+
+tidy_BN_count <- tidy_BN %>%
+  group_by(source) %>%
+  count(word, sort=TRUE)
+
+tidy_BN_count
 
 ```
 
@@ -89,7 +101,7 @@ colour_pal <- turbo(n=100)
 
 wc_data <- tidy_BN %>%
   count(word)  %>%
-  filter(n > 100)   # only include words that appear more than ten times
+  filter(n > 100)   # only include words that appear more than a hundred times
 wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
 ```
 
