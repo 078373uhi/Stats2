@@ -253,7 +253,27 @@ battle_net <- tidy_BN_count %>%
 ```{r netplots}
 navy_net + battle_net + flag_net
 ```
+```{r sent}
+# add sentiments to previous text corpus
+sent <- tidy_BN %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(source, word, sentiment, sort = TRUE) %>%
+  ungroup()
 
+head(sent)
+
+sent %>%
+  group_by(sentiment) %>%
+  slice_max(n, n = 10) %>% 
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(n, word, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(sentiment ~ source, nrow = 2, scales = "free_y") +
+  labs(x = "Contribution to Sentiment",
+       y = NULL) +
+  theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
+```
 
 
 
