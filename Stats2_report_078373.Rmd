@@ -202,9 +202,57 @@ ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
   geom_col(show.legend = FALSE) + labs(x = NULL, y = "tf-idf") +
   facet_wrap( ~ source, ncol = 5, scales = "free") + coord_flip()
 ```
+```{r wordnetwork, echo=FALSE}
+set.seed(1)
 
+a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
 
+navy_net <- tidy_BN_count %>%
+  filter(n>150) %>%
+  filter(source == "Navy") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network",
+       subtitle = "The British Navy Book",
+       x = "", y = "")
 
+flag_net <- tidy_BN_count %>%
+  filter(n>150) %>%
+  filter(source == "Flag") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network",
+       subtitle = "Flag and Fleet",
+       x = "", y = "")
+
+battle_net <- tidy_BN_count %>%
+  filter(n>150) %>%
+  filter(source == "Battle") %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(),
+                 arrow = a, end_cap = circle(0.25, "cm")) +
+  geom_node_point(colour="lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme(legend.position="none")+
+  theme_void() +
+  labs(title = "Word Network",
+       subtitle = "The British Navy in Battle",
+       x = "", y = "")
+```
+
+```{r netplots}
+navy_net + battle_net + flag_net
+```
 
 
 
