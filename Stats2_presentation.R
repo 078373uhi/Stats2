@@ -94,3 +94,15 @@ violence <- ggplot(books, aes(x = violence, fill = removed)) +
 violence
 
 author + obama + sex + family + occult + language + homosexuality + violence
+
+state <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = state, fill = removed)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle=270)) +
+  labs(y= "Number of books", x = "State") +
+  ggtitle("Books challenged by state") +
+  scale_fill_discrete(name = "Removed", labels = c("No", "Yes"))
+
+state
+
