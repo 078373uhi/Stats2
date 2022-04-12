@@ -103,132 +103,137 @@ Cgraduates
 # I have no real idea what this is telling us.  How can there be negative of  
 # graduates?
 
+# plot challenged books by median state income
 income <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed, y = cmedin)) +
-  geom_boxplot() +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ggtitle("Books challenged by median state income") + 
+  geom_boxplot() + #create box plot
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ggtitle("Books challenged by median state income") +  # add title and caption
   ylab("median state income (grand median centered)")
 
 income
+# This does not appear to show any clear pattern except that very slightly more
+# challenges were rejected in higher income areas.
 
+# plot challenged books by date (measured from January 1 2000)
 date <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed, y = days2000)) +
-  geom_boxplot() +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  geom_boxplot() + #create box plot
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
   ggtitle("Books challenged by date") + 
   labs(caption = "Date challenge was made, measured by number of days after January 1, 2000") +
-  ylab("days after January 1, 2000")
+  ylab("days after January 1, 2000") # add title and caption
 
 date
+# This shows that more rejections happened in more recent times (further away from
+# 1.1.2000) while successful challenges occurred more in the past.
 
+# plot by theme or material in book
 violence <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(violence = as.factor(violence)) %>%
   filter(violence == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Violent content") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-violence
+  ggtitle("Violent content") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 homosexuality <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(homosexuality = as.factor(homosexuality)) %>%
   filter(homosexuality == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Homosexual material") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-homosexuality
+  ggtitle("Homosexual material") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 language <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(language = as.factor(language)) %>%
   filter(language == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Inappropriate language") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-language
+  ggtitle("Inappropriate language") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 occult <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(occult = as.factor(occult)) %>%
   filter(occult == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Occult material") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-occult
+  ggtitle("Occult material") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 family <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(antifamily = as.factor(antifamily)) %>%
   filter(antifamily == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Anti-family material") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-family
+  ggtitle("Anti-family material") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 sex <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(sexexp = as.factor(sexexp)) %>%
   filter(sexexp == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Sexually explicit material") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-sex
+  ggtitle("Sexually explicit material") + # add title and labels 
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 obama <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(obama = as.factor(obama)) %>%
   filter(obama == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
+  geom_bar() + #create bar plot
   labs(y= "Number of books", x = "Removed") +
-  ggtitle("Obama was President") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
-
-obama
+  ggtitle("Obama was President") + # add title and labels
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
 author <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(freqchal = as.factor(freqchal)) %>%
   filter(freqchal == 1) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
-  labs(y= "Number of books", x = "Removed") +
+  geom_bar() + #create bar plot
+  labs(y= "Number of books", x = "Removed") + # add title and labels
   ggtitle("Frequently challenged authors (more than 10 challenges)") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ylim(0, 250)
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ylim(0, 250) # set common limits to compare plots
 
-author
-
+# compare plots by theme
 author + obama + sex + family + occult + language + homosexuality + violence
+# This shows that the theme with the most removals was sexually explicit material
+# followed by inappropriate language.  The least removals were from Anti-family and
+# occult themes.
 
 # Models
 m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
