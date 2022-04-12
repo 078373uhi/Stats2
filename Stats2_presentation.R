@@ -236,14 +236,39 @@ author + obama + sex + family + occult + language + homosexuality + violence
 # occult themes.
 
 # Models
-# standardise predictors
+## My general approach with these tasks is to copy an example from the coursework 
+## and apply it to my data however this data is way more complicated than anything
+## in the coursework so I have no real clue what I am doing here.
+
+## I know I should have training and test data but that is beyond me.
+
+# standardise predictors ## no idea if I need to do this? Or if I should apply 
+## this to all the predictors.  I decided to not apply it to binary data.
 books$pvi2adj <- scale(books$pvi2)
 books$cperhsadj <- scale(books$cperhs)
 books$cmedinadj <- scale(books$cmedin)
 books$cperbaadj <- scale(books$cperba)
 
+# Model 1 looks at all takes into account random variations by state ## I think
+model1 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                  language + homosexuality + violence + (1|state), data = books, 
+                family = binomial)
 
+summary(model1)
+## I also tried doing the same but without the variation by state.  I don't 
+## understand the results so I don't know which is better
+model0a <- glm(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                 language + homosexuality + violence, data = books, 
+               family = binomial)
 
+summary(model0a)
+
+# Model 2 looks at all takes into account random variations by politics ## I think
+model2 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                  language + homosexuality + violence + (1|pvi2adj), data = books, 
+                family = binomial)
+
+summary(model2)
 ################################################################################
 m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
               antifamily + cmedin + cperba + days2000 + occult + language + 
