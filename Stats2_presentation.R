@@ -74,6 +74,17 @@ income <- books %>%
 
 income
 
+date <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = removed, y = days2000)) +
+  geom_boxplot() +
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  ggtitle("Books challenged by date") + 
+  labs(caption = "Date challenge was made, measured by number of days after January 1, 2000") +
+  ylab("days after January 1, 2000")
+
+date
+
 violence <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(violence = as.factor(violence)) %>%
