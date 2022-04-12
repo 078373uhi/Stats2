@@ -44,6 +44,36 @@ politics <- books %>%
 
 politics
 
+HSgraduates <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = removed, y = cperhs)) +
+  geom_boxplot() +
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  ggtitle("Books challenged by High School graduation %") + 
+  ylab("Percentage of high school graduates in a state (grand mean centered)")
+
+HSgraduates
+
+Cgraduates <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = removed, y = cperba)) +
+  geom_boxplot() +
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  ggtitle("Books challenged by College graduation %") + 
+  ylab("Percentage of college graduates in a state (grand mean centered)")
+
+Cgraduates
+
+income <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = removed, y = cmedin)) +
+  geom_boxplot() +
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  ggtitle("Books challenged by median state income") + 
+  ylab("median state income (grand median centered)")
+
+income
+
 violence <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(violence = as.factor(violence)) %>%
