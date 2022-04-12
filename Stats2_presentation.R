@@ -240,35 +240,64 @@ author + obama + sex + family + occult + language + homosexuality + violence
 ## and apply it to my data however this data is way more complicated than anything
 ## in the coursework so I have no real clue what I am doing here.
 
-## I know I should have training and test data but that is beyond me.
+## I know I should have training and test data but that is beyond me.  I feel like
+## it doesn't really matter because this is such a mess anyway.
 
 # standardise predictors ## no idea if I need to do this? Or if I should apply 
-## this to all the predictors.  I decided to not apply it to binary data.
+## this to all the predictors.  I decided to not apply it to binary predictors.
 books$pvi2adj <- scale(books$pvi2)
 books$cperhsadj <- scale(books$cperhs)
 books$cmedinadj <- scale(books$cmedin)
 books$cperbaadj <- scale(books$cperba)
 
-# Model 1 looks at all takes into account random variations by state ## I think
+# Model 1 takes into account random variations by state ## I think
 model1 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
                   language + homosexuality + violence + (1|state), data = books, 
                 family = binomial)
 
-summary(model1)
-## I also tried doing the same but without the variation by state.  I don't 
-## understand the results so I don't know which is better
+summary(model1) # This appears to show that frequency challenged, Obama and 
+# inappropriate language may be significant.
+
+## I also tried doing the same but without the variation by state.  I think
+## it gives a similar result
 model0a <- glm(removed ~ freqchal + obama + sexexp +antifamily + occult + 
                  language + homosexuality + violence, data = books, 
                family = binomial)
 
 summary(model0a)
 
-# Model 2 looks at all takes into account random variations by politics ## I think
+# Model 2 takes into account random variations by politics ## I think
 model2 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
                   language + homosexuality + violence + (1|pvi2adj), data = books, 
                 family = binomial)
 
-summary(model2)
+summary(model2) # Same as model 1 - frequency challenged, Obama and 
+# inappropriate language may be significant.
+
+# Model 3 takes into account random variations by median income ## I think
+model3 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                  language + homosexuality + violence + (1|cmedinadj), data = books, 
+                family = binomial)
+
+summary(model3) # Same as model 1 and 2 - frequency challenged, Obama and 
+# inappropriate language may be significant. ## Are these really all telling 
+## me the same thing? 
+
+# Model 4 takes into account random variations by college graduation ## I think
+model4 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                  language + homosexuality + violence + (1|cperbaadj), data = books, 
+                family = binomial)
+
+summary(model4) #As previous
+
+# Model 5 takes into account random variations by HS graduation ## I think
+model5 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult + 
+                  language + homosexuality + violence + (1|cperhsadj), data = books, 
+                family = binomial)
+
+summary(model5) #As previous
+
+
 ################################################################################
 m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
               antifamily + cmedin + cperba + days2000 + occult + language + 
