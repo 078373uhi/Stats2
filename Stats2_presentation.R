@@ -6,6 +6,7 @@ library(glmmTMB)
 library(ggplot2)
 library(patchwork)
 
+
 # read in and check data
 books <- read.csv("~/Stats2/CS2.csv")
 
@@ -243,6 +244,10 @@ author + obama + sex + family + occult + language + homosexuality + violence
 ## I know I should have training and test data but that is beyond me.  I feel like
 ## it doesn't really matter because this is such a mess anyway.
 
+## Models using week 3 notes
+
+
+## Models using week 4 notes
 # standardise predictors ## no idea if I need to do this? Or if I should apply 
 ## this to all the predictors.  I decided to not apply it to binary predictors.
 books$pvi2adj <- scale(books$pvi2)
@@ -297,8 +302,7 @@ model5 <- glmer(removed ~ freqchal + obama + sexexp +antifamily + occult +
 
 summary(model5) #As previous
 
-
-################################################################################
+## Models using week 2 notes
 m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
               antifamily + cmedin + cperba + days2000 + occult + language + 
               homosexuality + violence, 
