@@ -34,6 +34,16 @@ state <- books %>%
 
 state
 
+politics <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = removed, y = pvi2)) +
+  geom_boxplot() +
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  ggtitle("Books challenged by state score on the Political Value Index") + 
+  labs(caption = "Positive indicates a Democratic leaning, negative indicates a Republican leaning, and 0 is neutral")
+
+politics
+
 violence <- books %>%
   mutate(removed = as.factor(removed)) %>%
   mutate(violence = as.factor(violence)) %>%
