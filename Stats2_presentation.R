@@ -12,44 +12,80 @@ books <- read.csv("~/Stats2/CS2.csv")
 view(books)
 summary(books)
 
-# plots to investigate data
+# Aim to determine what combination of books features are most likely to result 
+# in a successful challenge and the removal of the book.
+
+# tables and plots to investigate data
+table(books$removed) # look at how many challenged books were removed or not: 190 
+# removed and 610 not removed then view as a plot.
+
 allbooks <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed)) +
-  geom_bar() +
-  labs(y= "Number of books", x = "Removed") +
+  geom_bar() + #create bar plot
+  labs(y= "Number of books", x = "Removed") + # give titles
   ggtitle("Result of book challenges - all books") +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes"))
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) # change removed labels to 
+# yes/no
 
 allbooks
 
+# compare challenged books by state and whether removed or not
 state <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = state, fill = removed)) +
-  geom_bar() +
-  theme(axis.text.x = element_text(angle=270)) +
-  labs(y= "Number of books", x = "State") +
+  geom_bar() + #create bar plot
+  theme(axis.text.x = element_text(angle=270)) + # better present state labels
+  labs(y= "Number of books", x = "State") + # give titles
   ggtitle("Books challenged by state") +
-  scale_fill_discrete(name = "Removed", labels = c("No", "Yes"))
+  scale_fill_discrete(name = "Removed", labels = c("No", "Yes")) # change 
+# removed labels to yes/no
 
 state
 
+stateR <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  filter(removed == 1) %>%
+  ggplot(aes(x = state, fill = removed)) +
+  geom_bar() + #create bar plot
+  theme(axis.text.x = element_text(angle=270)) + # better present state labels
+  labs(y= "Number of books", x = "State") + # give titles
+  ggtitle("Books removed by state") +
+  theme(legend.position = "none") +
+  scale_fill_discrete(name = "Removed", labels = c("Yes")) # change 
+# removed labels to yes/no
+
+stateR
+
+# Pennsylvania has the highest number of books challenged followed by Oregon and 
+# Colorado.  The lowest number of book challenges were in Mississippi, Wyoming 
+# and West Virginia.  However, the number of books actually removed was highest
+# in Virginia (16 books) and California (12 books) and lowest in Alaska, Conneticut, 
+# Delaware, Mississippi, New Mexico, Rhode Island and South Dakota (1 book each).
+
+# plot challenged books by political leaning
 politics <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed, y = pvi2)) +
-  geom_boxplot() +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
+  geom_boxplot() + #create box plot
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
   ggtitle("Books challenged by state score on the Political Value Index") + 
+  # add title and caption
   labs(caption = "Positive indicates a Democratic leaning, negative indicates a Republican leaning, and 0 is neutral")
 
 politics
+# This shows that more books were removed in Republican leaning states than Democrats
+# and similarly more books were retained in Democrat states than Republican.
 
+# plot challenged books by % of High School graduates
 HSgraduates <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed, y = cperhs)) +
-  geom_boxplot() +
-  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ggtitle("Books challenged by High School graduation %") + 
+  geom_boxplot() + #create box plot
+  scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) + # change removed labels 
+  # to yes/no
+  ggtitle("Books challenged by High School graduation %") +  # add title 
   ylab("Percentage of high school graduates in a state (grand mean centered)")
 
 HSgraduates
@@ -57,12 +93,15 @@ HSgraduates
 Cgraduates <- books %>%
   mutate(removed = as.factor(removed)) %>%
   ggplot(aes(x = removed, y = cperba)) +
-  geom_boxplot() +
+  geom_boxplot() + #create box plot
   scale_x_discrete(labels=c("0" = "No", "1" = "Yes")) +
-  ggtitle("Books challenged by College graduation %") + 
-  ylab("Percentage of college graduates in a state (grand mean centered)")
+  ggtitle("Books challenged by College graduation %") +  # change removed labels 
+  # to yes/no
+  ylab("Percentage of college graduates in a state (grand mean centered)") # add title
 
 Cgraduates
+# I have no real idea what this is telling us.  How can there be negative of  
+# graduates?
 
 income <- books %>%
   mutate(removed = as.factor(removed)) %>%
@@ -190,3 +229,59 @@ author <- books %>%
 author
 
 author + obama + sex + family + occult + language + homosexuality + violence
+
+# Models
+m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
+              antifamily + cmedin + cperba + days2000 + occult + language + 
+              homosexuality + violence, 
+             data=books, family=binomial)
+
+tab_model(m_glm)
+
+m_glmstate = glm(removed ~ state, data = books, family = binomial)
+tab_model(m_glmstate)
+plot_model(m_glmstate, type='pred', grid = T)
+
+# model 1
+m_glm1 = glm(removed ~ freqchal + obama + sexexp + antifamily + occult + 
+               language + homosexuality + violence, 
+            data=books, family=binomial)
+tab_model(m_glm1)
+plot_model(m_glm1, type='pred', grid = T)
+# This suggests that books that include sexually explicit, occult, violent or 
+# homosexual material or inappropriate language have a higher chance of 
+# being removed, though the highest odds ratio comes for books with authors who
+# are frequently challenged.
+
+m_glm2 = glm(removed ~ freqchal + sexexp + occult + language + homosexuality + 
+               violence, 
+             data=books, family=binomial) # remove obama and anti-family
+tab_model(m_glm2)
+plot_model(m_glm2, type='pred', grid = T)
+# All variables in the model now increase the chances of a book being removed 
+# if challenged.
+
+m_glm3 = glm(removed ~ freqchal + sexexp + occult + language + homosexuality,
+             data=books, family=binomial) #removed violence
+
+m_glm4 = glm(removed ~ freqchal + sexexp + occult + language + violence, 
+             data=books, family=binomial) # remove homosexuality
+
+m_glm5 = glm(removed ~ freqchal + sexexp + occult + homosexuality + violence, 
+             data=books, family=binomial) #remove language
+
+m_glm6 = glm(removed ~ freqchal + sexexp + language + homosexuality + violence, 
+             data=books, family=binomial) # remove occult
+
+m_glm7 = glm(removed ~ freqchal + occult + language + homosexuality + violence, 
+             data=books, family=binomial) # remove sex
+
+m_glm8 = glm(removed ~ sexexp + occult + language + homosexuality + violence, 
+             data=books, family=binomial) # remove frequently challenged
+
+# compare models
+tab_model(m_glm2, m_glm3, m_glm4, m_glm5, m_glm6, m_glm7, m_glm8)
+
+anova(m_glm2, m_glm3, m_glm4, m_glm5, m_glm6, m_glm7, m_glm8, test = "Chisq")
+# Looking at the residual deviance shows that mdel 2 and model 6 have the lowest 
+# residual deviance which shows the better fit.
