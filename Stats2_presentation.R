@@ -236,6 +236,15 @@ author + obama + sex + family + occult + language + homosexuality + violence
 # occult themes.
 
 # Models
+# standardise predictors
+books$pvi2adj <- scale(books$pvi2)
+books$cperhsadj <- scale(books$cperhs)
+books$cmedinadj <- scale(books$cmedin)
+books$cperbaadj <- scale(books$cperba)
+
+
+
+################################################################################
 m_glm = glm(removed ~ state + freqchal + pvi2 + obama + cperhs + sexexp + 
               antifamily + cmedin + cperba + days2000 + occult + language + 
               homosexuality + violence, 
