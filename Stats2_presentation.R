@@ -244,9 +244,6 @@ author + obama + sex + family + occult + language + homosexuality + violence
 ## I know I should have training and test data but that is beyond me.  I feel like
 ## it doesn't really matter because this is such a mess anyway.
 
-## Models using week 3 notes
-
-
 ## Models using week 4 notes
 # standardise predictors ## no idea if I need to do this? Or if I should apply 
 ## this to all the predictors.  I decided to not apply it to binary predictors.
