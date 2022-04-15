@@ -112,6 +112,30 @@ l <- layout_randomly(comms_graph)
 # plot with random layout
 plot(comms_graph, layout = l)
 
+
+# circle layout
+set.seed(2)
+round <- layout_in_circle(comms_graph)
+plot(comms_graph, layout = round)
+
+
+# F-R algorithm
+set.seed(3)
+fr <- layout_with_fr(comms_graph)
+plot(comms_graph, layout = fr)
+
+# K-K algorithm
+set.seed(4)
+kk <- layout_with_kk(comms_graph)
+plot(comms_graph, layout = kk)
+
+# set seed for reproducibility
+set.seed(5)
+
+# visualise using ggraph with fr layout
+ggraph(comms_graph, layout = "fr") +
+  geom_edge_link() +
+  geom_node_point() 
 ```
 
 
