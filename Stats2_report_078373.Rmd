@@ -27,12 +27,17 @@ library(wordcloud)
 library(igraph)
 library(ggraph)
 library(reshape2)
+library(tidygraph)
+library(glue)
+library(igraphdata)
+library(visNetwork)
+library(igraph)
 ```
 
 ```{r setup, include=FALSE}
 # Read in data
-read.csv("navy_comms.csv")
-read.csv("navy_extra.csv")
+navy_comms <- read.csv("navy_comms.csv")
+navy_extra <- read.csv("navy_extra.csv")
 
 # load in texts
 battle <- read_lines("https://www.gutenberg.org/files/54441/54441-0.txt", skip = 214)
@@ -74,6 +79,24 @@ tidy_BN
 
 ## Network Analysis
 
+view(navy_comms)
+view(navy_extra)
+
+
+                                      
+```{r comms, include=FALSE}
+# edge dataframe
+(edge_df <- data.frame(
+  from = navy_comms$Source,
+  to = navy_comms$Recipient
+))
+
+# create graph
+(comms_graph <- graph_from_data_frame(edge_df, 
+                                         directed = FALSE))
+
+```                                      
+                                      
 ## Sentiment Analysis
 Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.
 
