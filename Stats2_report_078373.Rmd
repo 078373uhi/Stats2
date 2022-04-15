@@ -84,7 +84,7 @@ view(navy_extra)
 
 
                                       
-```{r comms, include=FALSE}
+```{r comms, include=TRUE}
 # edge dataframe
 (edge_df <- data.frame(
   from = navy_comms$Source,
@@ -96,7 +96,25 @@ view(navy_extra)
                                          directed = FALSE))
 
 ```                                      
+ 
+ 
+ 
+ 
                                       
+
+```{r comms2, echo=TRUE}
+# set seed for reproducibility
+set.seed(1)
+
+# create random layout (there are other layouts you can try)
+l <- layout_randomly(comms_graph)
+
+# plot with random layout
+plot(comms_graph, layout = l)
+
+```
+
+
 ## Sentiment Analysis
 Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.
 
