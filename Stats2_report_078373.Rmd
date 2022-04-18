@@ -314,6 +314,22 @@ navy_net + battle_net + flag_net
 
 ### Positivity measures
 
+It can be seen that when the text is allocated a positive or negative leaning, the corpus contains considerably  more negative words than positive.
+```{r sentcorp, echo=FALSE}
+# add sentiments to previous text corpus
+sentcorp <- tidy_BN %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(word, sentiment, sort = TRUE) 
+
+head(sentcorp)
+
+sentcorp %>%
+  group_by(sentiment) %>%
+  ggplot(aes(x = sentiment)) +
+  geom_bar()
+
+```
+This is reflected when measuring the positivity of the individual books too.  The British Navy in Battle contains primarily negative language.  The British Navy Book similarly contains a high number of negative words though more positive thanThe British Navy in Battle.  Flag and Fleet has the highest number of positive words though these are still overtaken by a largely negative text.
 
 ```{r sent, echo=FALSE}
 # add sentiments to previous text corpus
