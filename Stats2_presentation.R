@@ -44,6 +44,8 @@ state <- books %>%
 
 state
 
+table(books$state) 
+
 stateR <- books %>%
   mutate(removed = as.factor(removed)) %>%
   filter(removed == 1) %>%
@@ -58,11 +60,15 @@ stateR <- books %>%
 
 stateR
 
-# Pennsylvania has the highest number of books challenged followed by Oregon and 
-# Colorado.  The lowest number of book challenges were in Mississippi, Wyoming 
-# and West Virginia.  However, the number of books actually removed was highest
-# in Virginia (16 books) and California (12 books) and lowest in Alaska, Conneticut, 
-# Delaware, Mississippi, New Mexico, Rhode Island and South Dakota (1 book each).
+table(books$state, books$removed) 
+# Pennsylvania has the highest number of books challenged with 124 followed by 
+# Oregon (102) and Colorado (64).  The lowest number of book challenges were in 
+# Mississippi, Wyoming and West Virginia with 1 each.  However, the number of 
+# books actually removed was highest in Virginia (16 books) and California (12 
+# books) while Arkansas, Maryland, Maine, Minnesota, Montana, Nebraska, New 
+# Jersey, Vermont, West Virginia and Wyoming did not remove any books.
+
+
 
 # plot challenged books by political leaning
 politics <- books %>%
