@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r setup, include=FALSE}
+```{r setuppack, include=FALSE}
 # Install packages
 library(tidyverse)
 library(tidytext)
