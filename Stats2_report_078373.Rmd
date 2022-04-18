@@ -195,6 +195,7 @@ wc_data <- tidy_BN %>%
   filter(n > 100)   # only include words that appear more than a hundred times
 wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
 ```
+
 When analysed as individual texts the results of the word counts showed many similarities.  The same words as previously feature highly along with other common words such as battle, German and gun/s.  As this was analysis of individual texts it was decided to feture words that occurred more than 100 times in a text.
 
 ```{r plotbattle, echo=FALSE}
@@ -329,6 +330,7 @@ sentcorp %>%
   geom_bar()
 
 ```
+
 This is reflected when measuring the positivity of the individual books too.  The British Navy in Battle contains primarily negative language.  The British Navy Book similarly contains a high number of negative words though more positive thanThe British Navy in Battle.  Flag and Fleet has the highest number of positive words though these are still overtaken by a largely negative text.
 
 ```{r sent, echo=FALSE}
@@ -337,8 +339,6 @@ sent <- tidy_BN %>%
   inner_join(get_sentiments("bing"), by = "word") %>%
   count(source, word, sentiment, sort = TRUE) %>%
   ungroup()
-
-head(sent)
 
 sent %>%
   group_by(sentiment) %>%
@@ -359,8 +359,6 @@ tidy_BN2 <- tidy_BN %>%
     mutate(
     linenumber = row_number())
 
-head(tidy_BN2)
-
 # break text into chunks and measure positivity of each chunk
 sentiment <- tidy_BN2 %>%
   inner_join(get_sentiments("bing"), by="word") %>%
@@ -368,8 +366,6 @@ sentiment <- tidy_BN2 %>%
   pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %>% 
   mutate(sentiment = positive - negative)
 # index=linenumber %/% 1000, is splitting our text up into chunks of 1000 lines each.
-
-head(sentiment)
 
 # plot positivity by book
 ggplot(sentiment, aes(index, sentiment, fill = source)) +
