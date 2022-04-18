@@ -196,7 +196,7 @@ wc_data <- tidy_BN %>%
 wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
 ```
 
-When analysed as individual texts the results of the word counts showed many similarities.  The same words as previously feature highly along with other common words such as battle, German and gun/s.  As this was analysis of individual texts it was decided to feture words that occurred more than 100 times in a text.
+When analysed as individual texts the results of the word counts showed many similarities.  The same words as previously feature highly along with other common words such as battle, German and gun/s.  As this was analysis of individual texts it was decided to feature words that occurred more than 100 times in a text.
 
 ```{r plotbattle, echo=FALSE}
 plot_battle <- tidy_BN %>%
@@ -245,7 +245,7 @@ tidy_BN_count %>%
   bind_tf_idf(word, source, n) %>%
   arrange(desc(tf_idf)) 
 ```
-When analysed for word importance it is seen that "enemy's" has by far the highest importance rating follwed by "Koenigsberg" with these being the two most important words for the The British Navy in Battle.  "Breech" was the most important word for The British Navy Book while or Flag and Fleet it was "Spaniards".
+When analysed for word importance it is seen that "enemy's" has by far the highest importance rating followed by "Koenigsberg" with these being the two most important words for The British Navy in Battle.  "Breech" was the most important word for The British Navy Book while or Flag and Fleet it was "Spaniards".
 
 ```{r importplot, echo=FALSE}
 # Show word importance by Tf-idf weighting for each book
@@ -331,7 +331,20 @@ sentcorp %>%
 
 ```
 
-This is reflected when measuring the positivity of the individual books too.  The British Navy in Battle contains primarily negative language.  The British Navy Book similarly contains a high number of negative words though more positive thanThe British Navy in Battle.  Flag and Fleet has the highest number of positive words though these are still overtaken by a largely negative text.
+```{r sentcorp2, echo=FALSE}
+# add sentiments to previous text corpus
+
+
+sentcorp  %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "blue"),
+                   max.words = 1000)
+
+```
+
+This is reflected when measuring the positivity of the individual books too.  The British Navy in Battle contains primarily negative language.  The British Navy Book similarly contains a high number of negative words though more positive than The British Navy in Battle.  Flag and Fleet has the highest number of positive words though these are still overtaken by a largely negative text.
 
 ```{r sent, echo=FALSE}
 # add sentiments to previous text corpus
