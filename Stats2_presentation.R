@@ -6,7 +6,6 @@ library(glmmTMB)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
-install.packages("hrbrthemes")
 library(hrbrthemes)
 
 

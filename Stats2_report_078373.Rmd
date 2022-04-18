@@ -234,7 +234,7 @@ plot_flag <- tidy_BN %>%
   theme(legend.position="none")
 ```
 
-```{r countplots}
+```{r countplots, echo=FALSE}
 plot_battle + plot_navy + plot_flag
 ```
 
@@ -332,17 +332,6 @@ sentcorp %>%
 
 ```
 
-```{r sentcorp2, echo=FALSE}
-# add sentiments to previous text corpus
-sentcorp  %>%
-  inner_join(get_sentiments("bing")) %>%
-  count(word, sentiment, sort = TRUE) %>%
-  acast(word ~ sentiment, value.var = "n", fill = 0, scale = c(10, 0.1)) %>%
-  comparison.cloud(colors = c("red", "blue"),
-                   max.words = 100)
-
-```
-
 This is reflected when measuring the positivity of the individual books too.  The British Navy in Battle contains primarily negative language.  The British Navy Book similarly contains a high number of negative words though more positive than The British Navy in Battle.  Flag and Fleet has the highest number of positive words though these are still overtaken by a largely negative text.
 
 ```{r sent, echo=FALSE}
@@ -388,7 +377,7 @@ ggplot(sentiment, aes(index, sentiment, fill = source)) +
 ```
 
 #### Sentiment Context
-It is important to consider the context of a word when looking at the positivity value and when negation words are added it can be seen that a number of words have been wrongly assessed as negative so it may be that the corpus is not as negative as it initially appears; the wrongly assessed positive words though may negate some of this effect.
+It is important to consider the context of a word when looking at the positivity value and when negation words are added it can be seen that a number of words have been wrongly assessed as negative so it may be that the corpus is not as negative as it initially appears; however, the wrongly assessed positive words may negate some of this effect.
 ```{r sentcon, echo=FALSE}
 # get our books and tidy them with bigrams
 books_bigrams <- BritNavy %>%
