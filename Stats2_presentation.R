@@ -130,8 +130,22 @@ date <- books %>%
   ylab("days after January 1, 2000") # add title and caption
 
 date
-# This shows that more rejections happened in more recent times (further away from
-# 1.1.2000) while successful challenges occurred more in the past.
+# This shows that more failed challenges (books not rejected) happened in more 
+# recent times (further away from 1.1.2000) while successful challenges occurred 
+# more in the past.
+
+date2 <- books %>%
+  mutate(removed = as.factor(removed)) %>%
+  ggplot(aes(x = days2000, fill = removed)) +
+  geom_bar() + #create box plot
+  ylim(0,40) +
+  ggtitle("Books challenged by date") +
+  ylab("Number of books") +
+  xlab("days after January 1, 2000") +
+  scale_fill_discrete(name = "Removed", labels = c("No", "Yes")) # change 
+# removed labels to yes/no
+
+date2
 
 # plot by theme or material in book
 violence <- books %>%
@@ -241,8 +255,9 @@ author + obama + sex + family + occult + language + homosexuality + violence
 ## and apply it to my data however this data is way more complicated than anything
 ## in the coursework so I have no real clue what I am doing here.
 
-## I know I should have training and test data but that is beyond me.  I feel like
-## it doesn't really matter because this is such a mess anyway.
+## I know I should have training and test data but I haven't had time to figure 
+## out how to do that.  I feel like it doesn't really matter because this is 
+## such a mess anyway.
 
 ## Models using week 4 notes
 # standardise predictors ## no idea if I need to do this? Or if I should apply 
