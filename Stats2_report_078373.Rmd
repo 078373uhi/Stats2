@@ -74,6 +74,7 @@ tidy_BN
 
 ```
 ## Main findings
+
 ### 6-8 bullet points
 
 ## Network Analysis
@@ -388,7 +389,50 @@ ggplot(sentiment, aes(index, sentiment, fill = source)) +
        y = "Scale of positive/negative") 
 ```
 
+#### Sentiment Context
+It is important to consider the context of a word when looking at the positivity value and when negation words are added it can be seen that a number of words have been wrongly assessed as negative so it may be that the corpus is not as negative as it initially appears.
+```{r sentcon, echo=FALSE}
+# get our books and tidy them with bigrams
+books_bigrams <- BritNavy %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
 
+# reformat to have words in sep. columns
+bigrams_sep <- books_bigrams %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+# remove stop words
+bigrams_no_stop <- bigrams_sep %>%
+  filter(!word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word)
+
+# count bigrams
+bigram_counts <- bigrams_no_stop %>%
+  count(word1, word2, sort=TRUE)
+
+# check which words have plotted in the wrong positive/negative direction
+negation_words <- c("not", "no", "never", "without")
+
+# count affected words
+negated_words <- bigrams_sep %>%
+  filter(word1 %in% negation_words) %>%
+  inner_join(get_sentiments("afinn"), by = c(word2 = "word")) %>%
+  count(word1, word2, value, sort = TRUE)
+
+# plot affected words
+negated_words %>%
+  mutate(contribution = n * value,
+         word2 = reorder(paste(word2, word1, sep = "__"), contribution)) %>%
+  group_by(word1) %>%
+  slice_max(abs(contribution), n = 12, with_ties = FALSE) %>%
+  ggplot(aes(word2, contribution, fill = n * value > 0)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ word1, scales = "free") +
+  scale_x_discrete(labels = function(x) gsub("__.+$", "", x)) +
+  xlab("Words preceded by negation") +
+  ylab("Sentiment value by number of occurrences") +
+  coord_flip()
+
+```
 
 
 
