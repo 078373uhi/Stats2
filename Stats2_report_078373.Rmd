@@ -79,10 +79,30 @@ tidy_BN
 
 ## Network Analysis
 
-view(navy_comms)
-view(navy_extra)
+This table shows the information used for the network analysis 
 
+```{r com, include=FALSE}
+# join navycomms and navycomms extra to show additional information of type of asset
+# and rename columns accordingly
+navy_extra <- rename(navy_extra, Source = asset)
 
+navy_source <- navy_comms %>%
+  inner_join(navy_extra, by = "Source")
+
+navy_source <- rename(navy_source, SourceType = type)
+navy_source <- rename(navy_source, CommsType = Type)
+
+navy_source2 <- navy_source[, c(1, 5, 2, 3, 4)]
+
+navy_extra2 <- rename(navy_extra, Recipient = Source)
+
+navy_all<- navy_source2 %>%
+  inner_join(navy_extra2, by = "Recipient")
+
+navy_all <- rename(navy_all, RecipientType = type)
+navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
+navy_all
+```
                                       
 ```{r comms, include=TRUE}
 # edge dataframe
