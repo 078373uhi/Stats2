@@ -152,16 +152,9 @@ tidy_BN_count <- tidy_BN %>%
 
 ### Word Count and Frequency
 
-The British Navy Book is the book with the most words (41,909) followed by The British Navy in Battle (40,616) and Flag and Fleet has the least by quite a lot (32,834).  When looking at unique words used this is reflected too: The British Navy Book uses 9,901 unique words; The British Navy in Battle uses 7,182; and Flag and Fleet uses 6,803. 
+The British Navy Book is the book with the most words (41,909) followed by The British Navy in Battle (40,616) and Flag and Fleet has the least by quite an amount (32,834).  When looking at unique words used this is reflected too: The British Navy Book uses 9,901 unique words; The British Navy in Battle uses 7,182; and Flag and Fleet uses 6,803. 
 
-
-```{r countbook}
-#count words then group by source (book)
-count(tidy_BN, source)
-
-```
-
-```{r countuniq}
+```{r countuniq, echo=FALSE}
 #count words then group by source (book)
 count(tidy_BN, source)
 
@@ -180,9 +173,9 @@ tidy_BN %>%
   count(word, sort=TRUE)
 
 ```
-This plot and wordcloud show the highest frequency words when the books are combined.
+This plot and wordcloud show the highest frequency words when the books are combined.  Due to the high word count in the corpus it was decided to choose words that appear more than 250 times in the word count.  The highest frequency words are what would be expected given the topic of the books: British; ships; sea; war; and fleet.
 
-```{r plotBN}
+```{r plotBN, echo=FALSE}
 tidy_BN %>%
   count(word, sort = TRUE) %>%
   filter(n > 250) %>%
@@ -194,7 +187,7 @@ tidy_BN %>%
   theme(legend.position="none")
 ```
 
-```{r cloudBN}
+```{r cloudBN, echo=FALSE}
 colour_pal <- turbo(n=100)
 
 wc_data <- tidy_BN %>%
@@ -202,8 +195,7 @@ wc_data <- tidy_BN %>%
   filter(n > 100)   # only include words that appear more than a hundred times
 wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
 ```
-
-
+When analysed as individual texts the results of the word counts showed many similarities.  The same words as previously feature highly along with other common words such as battle, German and gun/s.  As this was analysis of individual texts it was decided to feture words that occurred more than 100 times in a text.
 
 ```{r plotbattle, echo=FALSE}
 plot_battle <- tidy_BN %>%
@@ -246,14 +238,15 @@ plot_battle + plot_navy + plot_flag
 
 ### Word importance weighting
 
-```{r import}
+```{r import, echo=FALSE}
 # Show word importance by Tf-idf weighting for all books
 tidy_BN_count %>%
   bind_tf_idf(word, source, n) %>%
   arrange(desc(tf_idf)) 
 ```
+When analysed for word importance it is seen that "enemy's" has by far the highest importance rating follwed by "Koenigsberg" with these being the two most important words for the The British Navy in Battle.  "Breech" was the most important word for The British Navy Book while or Flag and Fleet it was "Spaniards".
 
-```{r importplot}
+```{r importplot, echo=FALSE}
 # Show word importance by Tf-idf weighting for each book
 plot_importance <- tidy_BN_count %>%
   bind_tf_idf(word, source, n) %>%
@@ -264,6 +257,7 @@ ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
   geom_col(show.legend = FALSE) + labs(x = NULL, y = "tf-idf") +
   facet_wrap( ~ source, ncol = 5, scales = "free") + coord_flip()
 ```
+
 ### Word networks
 
 ```{r wordnetwork, echo=FALSE}
@@ -314,10 +308,14 @@ battle_net <- tidy_BN_count %>%
        x = "", y = "")
 ```
 
-```{r netplots}
+```{r netplots, echo=FALSE}
 navy_net + battle_net + flag_net
 ```
-```{r sent}
+
+### Positivity measures
+
+
+```{r sent, echo=FALSE}
 # add sentiments to previous text corpus
 sent <- tidy_BN %>%
   inner_join(get_sentiments("bing"), by = "word") %>%
@@ -338,9 +336,7 @@ sent %>%
        y = NULL) +
   theme(strip.text.x = element_text(margin = margin(2, 0, 2, 0)))
 ```
-### Positivity measure
-
-```{r positivity}
+```{r positivity, echo=FALSE}
 # Variation in overall positivity by book
 # prepare text for analysis
 tidy_BN2 <- tidy_BN %>%
