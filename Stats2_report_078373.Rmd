@@ -34,7 +34,7 @@ library(visNetwork)
 library(igraph)
 ```
 
-```{r setup, include=FALSE}
+```{r setupdata, include=FALSE}
 # Read in data
 navy_comms <- read.csv("navy_comms.csv")
 navy_extra <- read.csv("navy_extra.csv")
