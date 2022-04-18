@@ -81,12 +81,17 @@ states_count <- st_df_wide %>%
 
 view(states_count)
 
-ggplot(states_count) +
+lolplot <- ggplot(states_count) +
   geom_point(aes(x=Removed, y=State), color=rgb(0.7,0.2,0.1,0.5), size=3) +
   geom_point(aes(x=Not_Removed, y=State), color=rgb(0.2,0.7,0.1,0.5),  size=3) +
   geom_segment(aes(x=Removed, xend=Not_Removed, y = State, yend = State), color="grey") +
-  xlab("Books challenged") 
+  xlab("Books challenged") +
+  ggtitle("Books challenged by state") + 
+  # add title and caption
+  labs(caption = "Green shows failed challenges and red shows succesful challenges") +
+  scale_y_discrete(limits=rev)
 
+lolplot
 
 # Pennsylvania has the highest number of books challenged with 124 followed by 
 # Oregon (102) and Colorado (64).  The lowest number of book challenges were in 
