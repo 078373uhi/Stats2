@@ -5,6 +5,9 @@ library(tidyverse)
 library(glmmTMB)
 library(ggplot2)
 library(patchwork)
+library(dplyr)
+install.packages("hrbrthemes")
+library(hrbrthemes)
 
 
 # read in and check data
@@ -60,15 +63,37 @@ stateR <- books %>%
 
 stateR
 
-table(books$state, books$removed) 
+# create dataframe of challenges and success by state
+st <- table(books$state, books$removed) 
+st
+st_df <- as.data.frame(st)
+st_df <- rename(st_df, State = Var1)
+st_df <- rename(st_df, Removed = Var2)
+st_df <- rename(st_df, Count = Freq)
+st_df
+st_df_wide = pivot_wider(st_df, names_from = Removed, 
+                         values_from = Count)
+st_df_wide <- rename(st_df_wide, Removed = '1')
+st_df_wide <- rename(st_df_wide, Not_Removed = `0`)
+st_df_wide
+states_count <- st_df_wide %>%
+  mutate(Total_challenges = Not_Removed + Removed)
+
+view(states_count)
+
+ggplot(states_count) +
+  geom_point(aes(x=Removed, y=State), color=rgb(0.7,0.2,0.1,0.5), size=3) +
+  geom_point(aes(x=Not_Removed, y=State), color=rgb(0.2,0.7,0.1,0.5),  size=3) +
+  geom_segment(aes(x=Removed, xend=Not_Removed, y = State, yend = State), color="grey") +
+  xlab("Books challenged") 
+
+
 # Pennsylvania has the highest number of books challenged with 124 followed by 
 # Oregon (102) and Colorado (64).  The lowest number of book challenges were in 
 # Mississippi, Wyoming and West Virginia with 1 each.  However, the number of 
 # books actually removed was highest in Virginia (16 books) and California (12 
 # books) while Arkansas, Maryland, Maine, Minnesota, Montana, Nebraska, New 
 # Jersey, Vermont, West Virginia and Wyoming did not remove any books.
-
-
 
 # plot challenged books by political leaning
 politics <- books %>%
