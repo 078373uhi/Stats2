@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 # Install packages
 library(tidyverse)
 library(tidytext)
-install.packages("gutenbergr")
 library(gutenbergr)
 library(dplyr)
 library(ggplot2)
@@ -140,18 +139,14 @@ ggraph(comms_graph, layout = "fr") +
 
 
 ## Sentiment Analysis
-Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.
+Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.  The books were read in and any unnecessary introductory lines were removed.  The texts were then collated in a corpus and any stop words removed.  This allowed them to analysed.
 
 ```{r countBN, echo=FALSE}
 #count unique words then group by source (book)
-tidy_BN %>%
-  count(word, sort=TRUE)
-
 tidy_BN_count <- tidy_BN %>%
   group_by(source) %>%
   count(word, sort=TRUE)
 
-tidy_BN_count
 
 ```
 
@@ -396,66 +391,6 @@ ggplot(sentiment, aes(index, sentiment, fill = source)) +
 
 
 
-
-
-```{r countnavy}
-tidy_navy %>%
-  count(word, sort=TRUE)
-```
-```{r plotnavy, echo=FALSE}
-tidy_navy %>%
-  count(word, sort = TRUE) %>%
-  filter(n > 75) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(n, word, fill=word)) +
-  geom_col() +
-  labs(title='Word frequency for The British Navy Book',
-       y = NULL, x= "word count") +
-  theme(legend.position="none")
-```
-```{r countflag}
-tidy_flag %>%
-  count(word, sort=TRUE)
-```
-
-```{r plotflag, echo=FALSE}
-tidy_flag %>%
-  count(word, sort = TRUE) %>%
-  filter(n > 75) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(n, word, fill=word)) +
-  geom_col() +
-  labs(title='Word frequency for Flag and Fleet: How the British Navy Won the Freedom of the Seas',
-       y = NULL, x= "word count") +
-  theme(legend.position="none")
-```
-
-```{r cloudbattle}
-colour_pal <- turbo(n=100)
-
-wc_data <- tidy_battle %>%
-  count(word)  %>%
-  filter(n > 10)   # only include words that appear more than ten times
-wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
-```
-
-```{r cloudnavy}
-colour_pal <- turbo(n=100)
-
-wc_data <- tidy_navy %>%
-  count(word)  %>%
-  filter(n > 10)   # only include words that appear more than ten times
-wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
-```
-
-```{r cloudflag}
-colour_pal <- turbo(n=100)
-
-wc_data <- tidy_flag %>%
-  count(word)  %>%
-  filter(n > 10)   # only include words that appear more than ten times
-wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
-```
 
 
 ## Summary and Conclusion
