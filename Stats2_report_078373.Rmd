@@ -104,6 +104,10 @@ navy_all <- rename(navy_all, RecipientType = type)
 navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
 navy_all
 ```
+
+The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication and the duration.  The second table lists each naval resource and what type of vessel it is.  
+
+Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
        
 ```{r commsgraph, include=TRUE}
 # load the data
@@ -130,15 +134,34 @@ ggraph(navy_graph, layout = 'kk') +
 
 ```         
 
-
-```{r commssimple, include=TRUE}
+This is a list of vertices.
+```{r commsvert, include=TRUE}
 V(navy_graph)
 
+``` 
+
+This is a list of edges
+```{r commsedge, include=TRUE}
 E(navy_graph)
 
+``` 
+
+These graphs show the number of unique other vessels that a particular vessel is communicating with.
+```{r commsdegree, include=TRUE}
 sort(degree(navy_graph, mode="in"))
 sort(degree(navy_graph, mode="out"))
 sort(degree(navy_graph, mode="total"))
+``` 
+
+When looking at the strength measurement it can be seen that  HMS Unicorn had the strongest network with the highest number of communications (29) while HMS ALbatross had the least communications (13).
+
+```{r commsstrength, include=TRUE}
+
+sort(strength(navy_graph))
+``` 
+
+```{r commssimple, include=TRUE}
+
 sort(strength(navy_graph))
 sort(closeness(navy_graph, normalized=TRUE))
 sort(betweenness(navy_graph)) 
@@ -165,7 +188,7 @@ navy_tdy %>%
 ``` 
 
 
-This is an directed graph with named vertices which has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.     
+     
        
        
                                       
