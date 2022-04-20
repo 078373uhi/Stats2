@@ -104,6 +104,26 @@ navy_all <- rename(navy_all, RecipientType = type)
 navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
 navy_all
 ```
+       
+```{r commsgraph, include=TRUE}
+# load the data
+navy_edgelist <- navy_comms
+navy_vertices <- navy_extra
+
+# create undirected graph object
+navy_graph <- graph_from_data_frame(
+  d = navy_edgelist,
+  vertices = navy_vertices,
+  directed = TRUE
+)
+
+navy_graph
+
+```         
+
+This is an directed graph with named vertices which has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication.     
+       
+       
                                       
 ```{r comms, include=TRUE}
 # edge dataframe
