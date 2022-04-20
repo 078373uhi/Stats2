@@ -119,9 +119,53 @@ navy_graph <- graph_from_data_frame(
 
 navy_graph
 
+ggraph(navy_graph, layout = 'kk') +
+  geom_edge_fan(arrow = arrow(length = unit(4, 'mm')),
+                 end_cap = circle(5, 'mm')) +
+  geom_node_point(size = 14, color = "pink") +
+  geom_node_text(aes(label = name)) +
+  labs(legend.position="none") +
+  theme_void()
+
+
 ```         
 
-This is an directed graph with named vertices which has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication.     
+
+```{r commssimple, include=TRUE}
+V(navy_graph)
+
+E(navy_graph)
+
+sort(degree(navy_graph, mode="in"))
+sort(degree(navy_graph, mode="out"))
+sort(degree(navy_graph, mode="total"))
+sort(strength(navy_graph))
+sort(closeness(navy_graph, normalized=TRUE))
+sort(betweenness(navy_graph)) 
+``` 
+
+
+
+```{r com, include=TRUE}
+
+navy_tdy <- as_tbl_graph(navy_graph)
+
+navy_tdy %>% 
+  activate(nodes) %>%
+  mutate(pagerank = centrality_pagerank()) %>%
+  activate(edges) %>%
+  mutate(betweenness = centrality_edge_betweenness()) %>%
+  ggraph() +
+  geom_edge_link(aes(alpha = betweenness)) +
+  geom_node_point(aes(size = pagerank, colour = pagerank)) + 
+  geom_node_text(aes(label = name), repel=TRUE) +
+  # discrete colour legend
+  scale_color_gradient(guide = 'legend')
+
+``` 
+
+
+This is an directed graph with named vertices which has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.     
        
        
                                       
