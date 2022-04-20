@@ -160,11 +160,11 @@ When looking at the strength measurement it can be seen that  HMS Unicorn had th
 sort(strength(navy_graph))
 ``` 
 
-```{r commssimple, include=TRUE}
+This measure of closeness shows that HMS Eagle has the highest centrality and therefore the least steps or distance of communication.  HMS Royal Oak and HMS Warsprite had the lowest centrality and are therefore less likely to hear news first in the fleet.
 
-sort(strength(navy_graph))
+```{r commsclose, include=TRUE}
+
 sort(closeness(navy_graph, normalized=TRUE))
-sort(betweenness(navy_graph)) 
 ``` 
 
 
@@ -183,14 +183,34 @@ navy_tdy %>%
   geom_node_point(aes(size = pagerank, colour = pagerank)) + 
   geom_node_text(aes(label = name), repel=TRUE) +
   # discrete colour legend
-  scale_color_gradient(guide = 'legend')
+  scale_color_gradient(guide = 'legend') +
+  labs(title = "Plot of centrality")
 
-``` 
+```
 
+```{r navycommunity, include=TRUE}
+components(navy_graph)
 
+set.seed(15)
+navycomp <- components(navy_graph)
+
+ggraph(navy_graph, layout = "fr") +
+  geom_edge_link() +
+  geom_node_point(color = "lightblue",size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_void() +
+  labs(title = "Plot of community level")
+
+```  
      
-       
-       
+```{r navycommunity2, include=TRUE}
+navy <- decompose(navy_graph)[[1]]
+components(navy)
+
+cluster_walktrap(navy)
+
+```        
+    ###### start here next time#####   
                                       
 ```{r comms, include=TRUE}
 # edge dataframe
