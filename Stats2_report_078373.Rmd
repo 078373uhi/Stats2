@@ -223,70 +223,14 @@ cluster_walktrap(navy)
 ```        
 
 ### Network Level
-The longest path between 2 nodes is 3 edges and can be seen below: HMS Eagle > HMS Activity > HMS Belfast > HMS Hermes.  The mean distance shows that the average number of edges between any two nodes in the network is 1.563 and the first six can be seen below as an example.
+The longest path between 2 nodes is 3 edges and can be seen below: HMS Eagle > HMS Activity > HMS Belfast > HMS Hermes.  The mean distance shows that the average number of edges between any two nodes in the network is 1.563 and the first five can be seen below as an example.
 ```{r measure, echo=FALSE}
 diameter(navy_graph, directed=TRUE, weights=NA)
 get_diameter(navy_graph, directed=TRUE, weights=NA)
 mean_distance(navy_graph, directed=TRUE)
 distance <- distances(navy_graph, weights=NA)
-distance[1:6,1:6]
+distance[1:5,1:5]
 ```  
-
-                                      
-```{r comms, echo=FALSE}
-# edge dataframe
-(edge_df <- data.frame(
-  from = navy_comms$Source,
-  to = navy_comms$Recipient
-))
-
-# create graph
-(comms_graph <- graph_from_data_frame(edge_df, 
-                                         directed = FALSE))
-
-```                                      
- 
- 
- 
- 
-                                      
-
-```{r comms2, echo=FALSE}
-# set seed for reproducibility
-set.seed(1)
-
-# create random layout (there are other layouts you can try)
-l <- layout_randomly(comms_graph)
-
-# plot with random layout
-plot(comms_graph, layout = l)
-
-
-# circle layout
-set.seed(2)
-round <- layout_in_circle(comms_graph)
-plot(comms_graph, layout = round)
-
-
-# F-R algorithm
-set.seed(3)
-fr <- layout_with_fr(comms_graph)
-plot(comms_graph, layout = fr)
-
-# K-K algorithm
-set.seed(4)
-kk <- layout_with_kk(comms_graph)
-plot(comms_graph, layout = kk)
-
-# set seed for reproducibility
-set.seed(5)
-
-# visualise using ggraph with fr layout
-ggraph(comms_graph, layout = "fr") +
-  geom_edge_link() +
-  geom_node_point() 
-```
-
 
 ## Sentiment Analysis
 Three books were used for the sentiment analysis with the common theme of the British Navy.  These were The British Navy Book by Cyril Field, The British Navy in Battle by Arthur Joseph Hungerford Pollen and Flag and Fleet: How the British Navy Won the Freedom of the Seas by William Wood.  The books were read in and any unnecessary introductory lines were removed.  The texts were then collated in a corpus and any stop words removed.  This allowed them to analysed.
