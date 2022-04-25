@@ -118,7 +118,7 @@ The navy communications data contains 2 tables.  The first is a record of commun
 
 Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
        
-```{r commsgraph, include=TRUE}
+```{r commsgraph, echo=FALSE}
 # load the data
 navy_edgelist <- navy_comms
 navy_vertices <- navy_extra
@@ -132,7 +132,7 @@ navy_graph <- graph_from_data_frame(
 
 navy_graph
 
-ggraph(navy_graph, layout = 'kk') +
+plot1 <- ggraph(navy_graph, layout = 'kk') +
   geom_edge_fan(arrow = arrow(length = unit(4, 'mm')),
                  end_cap = circle(5, 'mm')) +
   geom_node_point(size = 14, color = "pink") +
@@ -143,20 +143,20 @@ ggraph(navy_graph, layout = 'kk') +
 
 ```         
 
-This is a list of vertices. There are 20.
-```{r commsvert, include=TRUE}
+This list of vertices shows that there are 20.
+```{r commsvert, echo=FALSE}
 V(navy_graph)
 
 ``` 
 
 There are 193 edges.
-```{r commsedge, include=TRUE}
+```{r commsedge, echo=FALSE}
 E(navy_graph)
 
 ``` 
 
 These graphs show the number of unique other vessels that any particular vessel is communicating with. This shows outgoing, incoming and total communications.  HMS Ark Royal has the most incoming communications with 17 while HMS Albatross has the least with only 5.  HMS Unicorn made 19 outgoing communications; this was the most while HMS Eagle made the least with 4.
-```{r commsdegree, include=TRUE}
+```{r commsdegree, echo=FALSE}
 sort(degree(navy_graph, mode="in"))
 sort(degree(navy_graph, mode="out"))
 sort(degree(navy_graph, mode="total"))
@@ -164,21 +164,21 @@ sort(degree(navy_graph, mode="total"))
 
 When looking at the strength measurement it can be seen that  HMS Unicorn had the strongest network with the highest number of communications (29) while HMS ALbatross had the least communications (13).
 
-```{r commsstrength, include=TRUE}
+```{r commsstrength, echo=FALSE}
 
 sort(strength(navy_graph))
 ``` 
 
 This measure of closeness shows that HMS Eagle has the highest centrality and therefore the least steps or distance of communication.  HMS Royal Oak and HMS Warsprite had the lowest centrality and are therefore less likely to hear news first in the fleet.
 
-```{r commsclose, include=TRUE}
+```{r commsclose, echo=FALSE}
 
 sort(closeness(navy_graph, normalized=TRUE))
 ``` 
 
 
 
-```{r com, include=TRUE}
+```{r com, echo=FALSE}
 
 navy_tdy <- as_tbl_graph(navy_graph)
 
@@ -198,7 +198,7 @@ navy_tdy %>%
 ```
 
 When inspecting the components of the network it can be seen that this netowrk has just one component, so is made up of just one group of nodes.
-```{r navycommunity, include=TRUE}
+```{r navycommunity, echo=FALSE}
 components(navy_graph)
 
 set.seed(15)
@@ -214,7 +214,7 @@ ggraph(navy_graph, layout = "fr") +
 ```  
 
 Using walktrap to detect clusters shows 2 clusters with a modularity score of 0.091.  Changing the number of steps in the walk did not result in any better score than this.  Less steps than the automatic 4 used gave the same score while more steps gave a reduced score.     
-```{r navycommunity2, include=TRUE}
+```{r navycommunity2, echo=FALSE}
 navy <- decompose(navy_graph)[[1]]
 components(navy)
 
@@ -224,7 +224,7 @@ cluster_walktrap(navy)
 
 ### Network Level
 The longest path between 2 nodes is 3 edges and can be seen below: HMS Eagle > HMS Activity > HMS Belfast > HMS Hermes.  The mean distance shows that the average number of edges between any two nodes in the network is 1.563 and the first six can be seen below as an example.
-```{r measure, include=TRUE}
+```{r measure, echo=FALSE}
 diameter(navy_graph, directed=TRUE, weights=NA)
 get_diameter(navy_graph, directed=TRUE, weights=NA)
 mean_distance(navy_graph, directed=TRUE)
@@ -233,7 +233,7 @@ distance[1:6,1:6]
 ```  
 
                                       
-```{r comms, include=TRUE}
+```{r comms, echo=FALSE}
 # edge dataframe
 (edge_df <- data.frame(
   from = navy_comms$Source,
@@ -251,7 +251,7 @@ distance[1:6,1:6]
  
                                       
 
-```{r comms2, echo=TRUE}
+```{r comms2, echo=FALSE}
 # set seed for reproducibility
 set.seed(1)
 
