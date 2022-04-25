@@ -78,7 +78,14 @@ tidy_BN
 ```
 ## Main findings
 
-### 6-8 bullet points
+* Naval communications were inspected for network analysis.
+* There were 193 communications between 20 vessels making up the network.
+* The network was directed as it included communications with a source and recipient.
+* The total number of communications to and from a vessel ranged from a maximum of 29 to a minimum of 5.
+* Three books on the subject of the British Navy were selected for sentiment analysis.
+* Word counts were between 32,834 and 41,909 and unique word counts reflected the word counts of each book.
+* Top five words used when looking at the three books combined were British, ships, sea, war, and fleet.
+* It was found that the sentiment of the books was largely negative though taking negation words into account could impact on that.
 
 ## Network Analysis
 
@@ -562,7 +569,11 @@ negated_words %>%
   coord_flip()
 
 ```
-## Summary and Conclusion
+## Executive Summary
+In conclusion it can be seen that 193 communications between 20 naval vessels of 7 different types was analysed. Communications ranged between 0 and 8.5 minutes.  The total number of communications to and from a vessel ranged from 29 to just 5.  The highest number of incoming communications was 17 and the highest number of outgoings 19.  The lowest of these was 5 and 4 respectively.   HMS Unicorn had the strongest network and HMS Albatross had the weakest.  HMS Eagle had the highest centrality and while HMS Royal Oak and HMS Warsprite had the lowest centrality. The longest path between 2 nodes is 3 edges and the mean distance in the network is 1.563.
+
+For the sentiment analysis three books on the subject of the British Navy were investigated.  The British Navy Book had the most words (41,909) while Flag and Fleet had the least with 32,834. Similarly, The British Navy Book used the most unique words (9,901) and Flag and Fleet used the least (6,803).  The top five words used when the books were combined into a corpus were  British, ships, sea, war, and fleet.  Individually they had similarly predictable common words such as battle, German and gun/s.  Both the combined corpus and the individual books showed primarily negative language when sentiment was considered though it was noted that the conext of a word was important and considering negation words may revise this somewhat.
+
 
 
 
