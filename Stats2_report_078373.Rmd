@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r setuppack, include=FALSE}
+# IF THERE IS A PROBLEM RUNNING THIS CHUNK IT APPEARS TO BE AN ISSUE WITH THE CHUNK ABOVE.  I HAVE NO IDEA WHY IT IS OCCURRING AS IT WORKED PERFECTLY FOR WEEKS WHILE I WORKED ON THIS, THEN THIS ISSUE BEGAN AT RANDOM. THE WAY I SOLVE IT IS TO OPEN A NEW R MARKDOWN FILE AND COPY AND PASTE THE SETUP CHUNK FROM THAT INTO THE ABOVE CHUNK THEN IT SEEMS TO WORK FINE.
+
 # Install packages
 library(tidyverse)
 library(tidytext)
@@ -109,7 +111,7 @@ The navy communications data contains 2 tables.  The first is a record of commun
 
 Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
        
-```{r commsgraph, include=FALSE}
+```{r commsgraph, include=TRUE}
 # load the data
 navy_edgelist <- navy_comms
 navy_vertices <- navy_extra
@@ -135,19 +137,19 @@ ggraph(navy_graph, layout = 'kk') +
 ```         
 
 This is a list of vertices. There are 20.
-```{r commsvert, include=FALSE}
+```{r commsvert, include=TRUE}
 V(navy_graph)
 
 ``` 
 
 There are 193 edges.
-```{r commsedge, include=FALSE}
+```{r commsedge, include=TRUE}
 E(navy_graph)
 
 ``` 
 
-These graphs show the number of unique other vessels that any particular vessel is communicating with. This shows outgoing, incoming and total communications.
-```{r commsdegree, include=FALSE}
+These graphs show the number of unique other vessels that any particular vessel is communicating with. This shows outgoing, incoming and total communications.  HMS Ark Royal has the most incoming communications with 17 while HMS Albatross has the least with only 5.  HMS Unicorn made 19 outgoing communications; this was the most while HMS Eagle made the least with 4.
+```{r commsdegree, include=TRUE}
 sort(degree(navy_graph, mode="in"))
 sort(degree(navy_graph, mode="out"))
 sort(degree(navy_graph, mode="total"))
@@ -155,21 +157,21 @@ sort(degree(navy_graph, mode="total"))
 
 When looking at the strength measurement it can be seen that  HMS Unicorn had the strongest network with the highest number of communications (29) while HMS ALbatross had the least communications (13).
 
-```{r commsstrength, include=FALSE}
+```{r commsstrength, include=TRUE}
 
 sort(strength(navy_graph))
 ``` 
 
 This measure of closeness shows that HMS Eagle has the highest centrality and therefore the least steps or distance of communication.  HMS Royal Oak and HMS Warsprite had the lowest centrality and are therefore less likely to hear news first in the fleet.
 
-```{r commsclose, include=FALSE}
+```{r commsclose, include=TRUE}
 
 sort(closeness(navy_graph, normalized=TRUE))
 ``` 
 
 
 
-```{r com, include=FALSE}
+```{r com, include=TRUE}
 
 navy_tdy <- as_tbl_graph(navy_graph)
 
@@ -188,7 +190,8 @@ navy_tdy %>%
 
 ```
 
-```{r navycommunity, include=FALSE}
+When inspecting the components of the network it can be seen that this netowrk has just one component, so is made up of just one group of nodes.
+```{r navycommunity, include=TRUE}
 components(navy_graph)
 
 set.seed(15)
@@ -202,7 +205,8 @@ ggraph(navy_graph, layout = "fr") +
   labs(title = "Plot of community level")
 
 ```  
-     
+
+Using walktrap to detect clusters shows 2 clusters with a modularity score of 0.091.  Changing the number of steps in the walk did not result in any better score than this.  Less steps than the automatic 4 used gave the same score while more steps gave a reduced score.     
 ```{r navycommunity2, include=TRUE}
 navy <- decompose(navy_graph)[[1]]
 components(navy)
@@ -210,7 +214,17 @@ components(navy)
 cluster_walktrap(navy)
 
 ```        
-    ###### start here next time#####   
+
+### Network Level
+The longest path between 2 nodes is 3 edges and can be seen below: HMS Eagle > HMS Activity > HMS Belfast > HMS Hermes.  The mean distance shows that the average number of edges between any two nodes in the network is 1.563 and the first six can be seen below as an example.
+```{r measure, include=TRUE}
+diameter(navy_graph, directed=TRUE, weights=NA)
+get_diameter(navy_graph, directed=TRUE, weights=NA)
+mean_distance(navy_graph, directed=TRUE)
+distance <- distances(navy_graph, weights=NA)
+distance[1:6,1:6]
+```  
+
                                       
 ```{r comms, include=TRUE}
 # edge dataframe
