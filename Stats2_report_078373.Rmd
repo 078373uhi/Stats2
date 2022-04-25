@@ -76,6 +76,7 @@ tidy_BN <- BritNavy %>%
 tidy_BN <- tidy_BN %>%
   anti_join(stop_words)
 ```
+# Naval Communications Analysis
 
 ## Main findings
 
@@ -108,9 +109,11 @@ navy_all<- navy_source2 %>%
 navy_all <- rename(navy_all, RecipientType = type) #rename type to RecipientType
 navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)] #create table with reorder of columns
 navy_all #view new table containing all navy comms data
+
+table(navy_all$CommsType)
 ```
 
-The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication (morse or radio) and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
+The navy communications data contains 2 tables.  The first is a record of communications between naval vessels.  There is a source and recipient of the communication as well as the type of communication (morse or radio) and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes and 84 communications were by morse and 109 by radio.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
 
 ```{r commsgraph, echo=FALSE}
 # load the data
