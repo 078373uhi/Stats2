@@ -78,18 +78,13 @@ tidy_BN
 ```
 ## Main findings
 
-* Naval communications were inspected for network analysis.
-* There were 193 communications between 20 vessels making up the network.
-* The network was directed as it included communications with a source and recipient.
+* Naval communications were inspected for network analysis and there were 193 communications between 20 vessels.
 * The total number of communications to and from a vessel ranged from a maximum of 29 to a minimum of 5.
 * Three books on the subject of the British Navy were selected for sentiment analysis.
-* Word counts were between 32,834 and 41,909 and unique word counts reflected the word counts of each book.
 * Top five words used when looking at the three books combined were British, ships, sea, war, and fleet.
 * It was found that the sentiment of the books was largely negative though taking negation words into account could impact on that.
 
 ## Network Analysis
-
-This table shows the information used for the network analysis 
 
 ```{r com1, include=FALSE}
 # join navycomms and navycomms extra to show additional information of type of asset
@@ -114,10 +109,8 @@ navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
 navy_all
 ```
 
-The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
+The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication (morse or radio) and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
 
-Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
-       
 ```{r commsgraph, echo=FALSE}
 # load the data
 navy_edgelist <- navy_comms
@@ -143,19 +136,18 @@ plot1 <- ggraph(navy_graph, layout = 'kk') +
 
 ```         
 
-This list of vertices shows that there are 20.
+There are 20 vertices and 193 edges.
 ```{r commsvert, echo=FALSE}
 V(navy_graph)
 
 ``` 
 
-There are 193 edges.
 ```{r commsedge, echo=FALSE}
 E(navy_graph)
 
 ``` 
 
-These graphs show the number of unique other vessels that any particular vessel is communicating with. This shows outgoing, incoming and total communications.  HMS Ark Royal has the most incoming communications with 17 while HMS Albatross has the least with only 5.  HMS Unicorn made 19 outgoing communications; this was the most while HMS Eagle made the least with 4.
+This is the number of unique other vessels that any particular vessel is communicating with, including outgoing, incoming and total communications.  HMS Ark Royal has the most incoming communications with 17 while HMS Albatross has the least with only 5.  HMS Unicorn made 19 outgoing communications; this was the most while HMS Eagle made the least with 4.
 ```{r commsdegree, echo=FALSE}
 sort(degree(navy_graph, mode="in"))
 sort(degree(navy_graph, mode="out"))
@@ -197,7 +189,7 @@ navy_tdy %>%
 
 ```
 
-When inspecting the components of the network it can be seen that this netowrk has just one component, so is made up of just one group of nodes.
+This network has just one component; it is made up of just one group of nodes.
 ```{r navycommunity, echo=FALSE}
 components(navy_graph)
 
@@ -213,7 +205,7 @@ ggraph(navy_graph, layout = "fr") +
 
 ```  
 
-Using walktrap to detect clusters shows 2 clusters with a modularity score of 0.091.  Changing the number of steps in the walk did not result in any better score than this.  Less steps than the automatic 4 used gave the same score while more steps gave a reduced score.     
+Using walktrap to detect clusters shows 2 clusters with a modularity score of 0.091.  Changing the number of steps in the walk did not result in any better score than this.  
 ```{r navycommunity2, echo=FALSE}
 navy <- decompose(navy_graph)[[1]]
 components(navy)
@@ -246,7 +238,7 @@ tidy_BN_count <- tidy_BN %>%
 
 ### Word Count and Frequency
 
-The British Navy Book is the book with the most words (41,909) followed by The British Navy in Battle (40,616) and Flag and Fleet has the least by quite an amount (32,834).  When looking at unique words used this is reflected too: The British Navy Book uses 9,901 unique words; The British Navy in Battle uses 7,182; and Flag and Fleet uses 6,803. 
+The British Navy Book has the most words (41,909) followed by The British Navy in Battle (40,616) while Flag and Fleet has the least (32,834).  This is reflected in the unique words used: The British Navy Book uses 9,901 unique words; The British Navy in Battle uses 7,182; and Flag and Fleet uses 6,803. 
 
 ```{r countuniq, echo=FALSE}
 #count words then group by source (book)
@@ -267,7 +259,7 @@ tidy_BN %>%
   count(word, sort=TRUE)
 
 ```
-This plot and wordcloud show the highest frequency words when the books are combined.  Due to the high word count in the corpus it was decided to choose words that appear more than 250 times in the word count.  The highest frequency words are what would be expected given the topic of the books: British; ships; sea; war; and fleet.
+Due to the high word count in the corpus it was decided to choose words that appear more than 250 times in the word count.  The highest frequency words are what would be expected given the topic of the books: British; ships; sea; war; and fleet.
 
 ```{r plotBN, echo=FALSE}
 tidy_BN %>%
@@ -517,7 +509,7 @@ negated_words %>%
 ## Executive Summary
 In conclusion it can be seen that 193 communications between 20 naval vessels of 7 different types was analysed. Communications ranged between 0 and 8.5 minutes.  The total number of communications to and from a vessel ranged from 29 to just 5.  The highest number of incoming communications was 17 and the highest number of outgoings 19.  The lowest of these was 5 and 4 respectively.   HMS Unicorn had the strongest network and HMS Albatross had the weakest.  HMS Eagle had the highest centrality and while HMS Royal Oak and HMS Warsprite had the lowest centrality. The longest path between 2 nodes is 3 edges and the mean distance in the network is 1.563.
 
-For the sentiment analysis three books on the subject of the British Navy were investigated.  The British Navy Book had the most words (41,909) while Flag and Fleet had the least with 32,834. Similarly, The British Navy Book used the most unique words (9,901) and Flag and Fleet used the least (6,803).  The top five words used when the books were combined into a corpus were  British, ships, sea, war, and fleet.  Individually they had similarly predictable common words such as battle, German and gun/s.  Both the combined corpus and the individual books showed primarily negative language when sentiment was considered though it was noted that the conext of a word was important and considering negation words may revise this somewhat.
+For the sentiment analysis three books on the subject of the British Navy were investigated.  The British Navy Book had the most words (41,909) while Flag and Fleet had the least with 32,834. Similarly, The British Navy Book used the most unique words (9,901) and Flag and Fleet used the least (6,803).  The top five words used when the books were combined into a corpus were  British, ships, sea, war, and fleet.  Individually they had similarly predictable common words such as battle, German and gun/s.  Both the combined corpus and the individual books showed primarily negative language when sentiment was considered though it was noted that the context of a word was important and considering negation words may revise this somewhat.
 
 
 
