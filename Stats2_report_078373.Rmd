@@ -178,7 +178,7 @@ sort(closeness(navy_graph, normalized=TRUE))
 
 
 
-```{r com, echo=FALSE}
+```{r com, echo=FALSE, warning = FALSE}
 
 navy_tdy <- as_tbl_graph(navy_graph)
 
@@ -513,6 +513,7 @@ negated_words %>%
   coord_flip()
 
 ```
+
 ## Executive Summary
 In conclusion it can be seen that 193 communications between 20 naval vessels of 7 different types was analysed. Communications ranged between 0 and 8.5 minutes.  The total number of communications to and from a vessel ranged from 29 to just 5.  The highest number of incoming communications was 17 and the highest number of outgoings 19.  The lowest of these was 5 and 4 respectively.   HMS Unicorn had the strongest network and HMS Albatross had the weakest.  HMS Eagle had the highest centrality and while HMS Royal Oak and HMS Warsprite had the lowest centrality. The longest path between 2 nodes is 3 edges and the mean distance in the network is 1.563.
 
