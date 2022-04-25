@@ -9,11 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ```{r setuppack, include=FALSE}
 # Install packages
 library(tidyverse)
 library(tidytext)
-install.packages("gutenbergr")
 library(gutenbergr)
 library(dplyr)
 library(ggplot2)
@@ -82,7 +82,7 @@ tidy_BN
 
 This table shows the information used for the network analysis 
 
-```{r com, include=FALSE}
+```{r com1, include=FALSE}
 # join navycomms and navycomms extra to show additional information of type of asset
 # and rename columns accordingly
 navy_extra <- rename(navy_extra, Source = asset)
@@ -109,7 +109,7 @@ The navy communications data contains 2 tables.  The first is a record of commun
 
 Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
        
-```{r commsgraph, include=TRUE}
+```{r commsgraph, include=FALSE}
 # load the data
 navy_edgelist <- navy_comms
 navy_vertices <- navy_extra
@@ -134,20 +134,20 @@ ggraph(navy_graph, layout = 'kk') +
 
 ```         
 
-This is a list of vertices.
+This is a list of vertices. There are 20.
 ```{r commsvert, include=TRUE}
 V(navy_graph)
 
 ``` 
 
-This is a list of edges
+There are 193 edges.
 ```{r commsedge, include=TRUE}
 E(navy_graph)
 
 ``` 
 
-These graphs show the number of unique other vessels that a particular vessel is communicating with.
-```{r commsdegree, include=TRUE}
+These graphs show the number of unique other vessels that any particular vessel is communicating with. This shows outgoing, incoming and total communications.
+```{r commsdegree, include=FALSE}
 sort(degree(navy_graph, mode="in"))
 sort(degree(navy_graph, mode="out"))
 sort(degree(navy_graph, mode="total"))
