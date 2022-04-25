@@ -105,7 +105,7 @@ navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
 navy_all
 ```
 
-The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication and the duration.  The second table lists each naval resource and what type of vessel it is.  
+The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
 
 Looking at this graph of the navy communications data network it can be seen that this is a directed graph with named vertices.  It has 20 vertices and 193 edges.  This is a bipartite graph as it also contains an attribute that shows the type of communication; either morse or radio.
        
@@ -135,13 +135,13 @@ ggraph(navy_graph, layout = 'kk') +
 ```         
 
 This is a list of vertices. There are 20.
-```{r commsvert, include=TRUE}
+```{r commsvert, include=FALSE}
 V(navy_graph)
 
 ``` 
 
 There are 193 edges.
-```{r commsedge, include=TRUE}
+```{r commsedge, include=FALSE}
 E(navy_graph)
 
 ``` 
@@ -155,21 +155,21 @@ sort(degree(navy_graph, mode="total"))
 
 When looking at the strength measurement it can be seen that  HMS Unicorn had the strongest network with the highest number of communications (29) while HMS ALbatross had the least communications (13).
 
-```{r commsstrength, include=TRUE}
+```{r commsstrength, include=FALSE}
 
 sort(strength(navy_graph))
 ``` 
 
 This measure of closeness shows that HMS Eagle has the highest centrality and therefore the least steps or distance of communication.  HMS Royal Oak and HMS Warsprite had the lowest centrality and are therefore less likely to hear news first in the fleet.
 
-```{r commsclose, include=TRUE}
+```{r commsclose, include=FALSE}
 
 sort(closeness(navy_graph, normalized=TRUE))
 ``` 
 
 
 
-```{r com, include=TRUE}
+```{r com, include=FALSE}
 
 navy_tdy <- as_tbl_graph(navy_graph)
 
@@ -188,7 +188,7 @@ navy_tdy %>%
 
 ```
 
-```{r navycommunity, include=TRUE}
+```{r navycommunity, include=FALSE}
 components(navy_graph)
 
 set.seed(15)
