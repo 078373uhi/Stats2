@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r setuppack, include=FALSE}
 # IF THERE IS A PROBLEM RUNNING THIS CHUNK IT APPEARS TO BE AN ISSUE WITH THE CHUNK ABOVE.  I HAVE NO IDEA WHY IT IS OCCURRING AS IT WORKED PERFECTLY FOR WEEKS WHILE I WORKED ON THIS, THEN THIS ISSUE BEGAN AT RANDOM. THE WAY I SOLVE IT IS TO OPEN A NEW R MARKDOWN FILE AND COPY AND PASTE THE SETUP CHUNK FROM THAT INTO THE ABOVE CHUNK THEN IT SEEMS TO WORK FINE.
 
-# Install packages
+# Install required packages
 library(tidyverse)
 library(tidytext)
 library(gutenbergr)
@@ -41,22 +41,27 @@ library(igraph)
 navy_comms <- read.csv("navy_comms.csv")
 navy_extra <- read.csv("navy_extra.csv")
 
-# load in texts
+# load in first text
 battle <- read_lines("https://www.gutenberg.org/files/54441/54441-0.txt", skip = 214)
 head(battle, 10)
 
+# create a tibble
 battle_text <- tibble(source='Battle',text = battle)
 head(battle_text)
 
+# load in second text
 navybook <- read_lines("https://www.gutenberg.org/cache/epub/41677/pg41677.txt", skip = 264)
 head(navybook, 10)
 
+# create a tibble
 navy_text <- tibble(source='Navy',text = navybook)
 head(navy_text)
 
+# load in third text
 flag <- read_lines("https://www.gutenberg.org/cache/epub/19849/pg19849.txt", skip = 426)
 head(flag, 10)
 
+# create a tibble
 flag_text <- tibble(source='Flag',text = flag)
 head(flag_text)
 
@@ -72,10 +77,6 @@ tidy_BN <- tidy_BN %>%
   anti_join(stop_words)
 ```
 
-```{r showBN, include=FALSE}
-tidy_BN
-
-```
 ## Main findings
 
 * Naval communications were inspected for network analysis and there were 193 communications between 20 vessels.
@@ -89,24 +90,24 @@ tidy_BN
 ```{r com1, include=FALSE}
 # join navycomms and navycomms extra to show additional information of type of asset
 # and rename columns accordingly
-navy_extra <- rename(navy_extra, Source = asset)
+navy_extra <- rename(navy_extra, Source = asset) #rename asset to Source
 
 navy_source <- navy_comms %>%
-  inner_join(navy_extra, by = "Source")
+  inner_join(navy_extra, by = "Source") #join tables based on Source column
 
-navy_source <- rename(navy_source, SourceType = type)
-navy_source <- rename(navy_source, CommsType = Type)
+navy_source <- rename(navy_source, SourceType = type) #rename type to SourceType
+navy_source <- rename(navy_source, CommsType = Type) #rename type to CommsType
 
-navy_source2 <- navy_source[, c(1, 5, 2, 3, 4)]
+navy_source2 <- navy_source[, c(1, 5, 2, 3, 4)] #create table with reorder of columns
 
-navy_extra2 <- rename(navy_extra, Recipient = Source)
+navy_extra2 <- rename(navy_extra, Recipient = Source) #rename Source to Recipient
 
 navy_all<- navy_source2 %>%
-  inner_join(navy_extra2, by = "Recipient")
+  inner_join(navy_extra2, by = "Recipient") #join tables based on Recipient column
 
-navy_all <- rename(navy_all, RecipientType = type)
-navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)]
-navy_all
+navy_all <- rename(navy_all, RecipientType = type) #rename type to RecipientType
+navy_all <- navy_all[, c(1, 2, 3, 6, 4, 5)] #create table with reorder of columns
+navy_all #view new table containing all navy comms data
 ```
 
 The navy communications data contains 2 tables.  The first is a record of communications between naval resources.  There is a source and recipient of the communication as well as the type of communication (morse or radio) and the duration.  There are 193 entries in the table.  Duration of communication ranges from 0 to 8.5 minutes.  The second table lists each naval resource and what type of vessel it is. This shows that there are 20 different vessels included and there are 7 different types: aircraft carrier (5); battlecruiser (1); battleship (4); cruiser (4); escort carrier (2); repair ship (2); and submarine (2).  
@@ -116,16 +117,17 @@ The navy communications data contains 2 tables.  The first is a record of commun
 navy_edgelist <- navy_comms
 navy_vertices <- navy_extra
 
-# create undirected graph object
+# create directed graph object
 navy_graph <- graph_from_data_frame(
   d = navy_edgelist,
   vertices = navy_vertices,
   directed = TRUE
 )
 
-navy_graph
+navy_graph #view graph 
 
-plot1 <- ggraph(navy_graph, layout = 'kk') +
+#create graph showing network links
+ggraph(navy_graph, layout = 'kk') +
   geom_edge_fan(arrow = arrow(length = unit(4, 'mm')),
                  end_cap = circle(5, 'mm')) +
   geom_node_point(size = 14, color = "pink") +
@@ -138,43 +140,43 @@ plot1 <- ggraph(navy_graph, layout = 'kk') +
 
 There are 20 vertices and 193 edges.
 ```{r commsvert, echo=FALSE}
-V(navy_graph)
+V(navy_graph) #show vertices
 
 ``` 
 
 ```{r commsedge, echo=FALSE}
-E(navy_graph)
+E(navy_graph) #show edges
 
 ``` 
 
 This is the number of unique other vessels that any particular vessel is communicating with, including outgoing, incoming and total communications.  HMS Ark Royal has the most incoming communications with 17 while HMS Albatross has the least with only 5.  HMS Unicorn made 19 outgoing communications; this was the most while HMS Eagle made the least with 4.
 ```{r commsdegree, echo=FALSE}
-sort(degree(navy_graph, mode="in"))
-sort(degree(navy_graph, mode="out"))
-sort(degree(navy_graph, mode="total"))
+sort(degree(navy_graph, mode="in")) #show incoming communications
+sort(degree(navy_graph, mode="out")) #show outgoing communications
+sort(degree(navy_graph, mode="total")) #show total communications
 ``` 
 
 When looking at the strength measurement it can be seen that  HMS Unicorn had the strongest network with the highest number of communications (29) while HMS ALbatross had the least communications (13).
 
 ```{r commsstrength, echo=FALSE}
 
-sort(strength(navy_graph))
+sort(strength(navy_graph)) #show strength of communications in order of weakest to strongest
 ``` 
 
 This measure of closeness shows that HMS Eagle has the highest centrality and therefore the least steps or distance of communication.  HMS Royal Oak and HMS Warsprite had the lowest centrality and are therefore less likely to hear news first in the fleet.
 
 ```{r commsclose, echo=FALSE}
 
-sort(closeness(navy_graph, normalized=TRUE))
+sort(closeness(navy_graph, normalized=TRUE)) # show measure of closeness between nodes
 ``` 
 
 
 
 ```{r com, echo=FALSE, warning = FALSE}
+# create plot of centrality
+navy_tdy <- as_tbl_graph(navy_graph) #make graph into table
 
-navy_tdy <- as_tbl_graph(navy_graph)
-
-navy_tdy %>% 
+navy_tdy %>%  #create plot from table
   activate(nodes) %>%
   mutate(pagerank = centrality_pagerank()) %>%
   activate(edges) %>%
@@ -191,11 +193,12 @@ navy_tdy %>%
 
 This network has just one component; it is made up of just one group of nodes.
 ```{r navycommunity, echo=FALSE}
-components(navy_graph)
+components(navy_graph) # check components of network
 
 set.seed(15)
-navycomp <- components(navy_graph)
+navycomp <- components(navy_graph) #create graph view of network components
 
+# create plot
 ggraph(navy_graph, layout = "fr") +
   geom_edge_link() +
   geom_node_point(color = "lightblue",size = 5) +
@@ -207,6 +210,7 @@ ggraph(navy_graph, layout = "fr") +
 
 Using walktrap to detect clusters shows 2 clusters with a modularity score of 0.091.  Changing the number of steps in the walk did not result in any better score than this.  
 ```{r navycommunity2, echo=FALSE}
+# create walktrap decomposition to find clusters
 navy <- decompose(navy_graph)[[1]]
 components(navy)
 
@@ -217,9 +221,10 @@ cluster_walktrap(navy)
 ### Network Level
 The longest path between 2 nodes is 3 edges and can be seen below: HMS Eagle > HMS Activity > HMS Belfast > HMS Hermes.  The mean distance shows that the average number of edges between any two nodes in the network is 1.563 and the first five can be seen below as an example.
 ```{r measure, echo=FALSE}
-diameter(navy_graph, directed=TRUE, weights=NA)
-get_diameter(navy_graph, directed=TRUE, weights=NA)
-mean_distance(navy_graph, directed=TRUE)
+diameter(navy_graph, directed=TRUE, weights=NA) #measure diameter of network
+get_diameter(navy_graph, directed=TRUE, weights=NA) #show diameter 
+mean_distance(navy_graph, directed=TRUE) # get mean distance between nodes
+# show top five distance measures
 distance <- distances(navy_graph, weights=NA)
 distance[1:5,1:5]
 ```  
@@ -245,7 +250,6 @@ The British Navy Book has the most words (41,909) followed by The British Navy i
 count(tidy_BN, source)
 
 #count unique words per book
-
 tidy_BN %>%
   filter(source == "Battle") %>%
   count(word, sort=TRUE)
@@ -262,11 +266,12 @@ tidy_BN %>%
 Due to the high word count in the corpus it was decided to choose words that appear more than 250 times in the word count.  The highest frequency words are what would be expected given the topic of the books: British; ships; sea; war; and fleet.
 
 ```{r plotBN, echo=FALSE}
+# create plot of word frequency for corpus
 tidy_BN %>%
   count(word, sort = TRUE) %>%
-  filter(n > 250) %>%
+  filter(n > 250) %>% #filter to words used more than 250 times
   mutate(word = reorder(word, n)) %>%
-  ggplot(aes(n, word, fill=word)) +
+  ggplot(aes(n, word, fill=word)) + # create plot
   geom_col() +
   labs(title='Word frequency for the three books together',
        y = NULL, x= "word count") +
@@ -276,6 +281,7 @@ tidy_BN %>%
 ```{r cloudBN, echo=FALSE}
 colour_pal <- turbo(n=100)
 
+# create word cloud showing top words in corpus
 wc_data <- tidy_BN %>%
   count(word)  %>%
   filter(n > 100)   # only include words that appear more than a hundred times
@@ -285,10 +291,12 @@ wordcloud2(wc_data, shape='circle', size=0.5, color=colour_pal)
 When analysed as individual texts the results of the word counts showed many similarities.  The same words as previously feature highly along with other common words such as battle, German and gun/s.  As this was analysis of individual texts it was decided to feature words that occurred more than 100 times in a text.
 
 ```{r plotbattle, echo=FALSE}
+#create plot of top words used in each book
+
 plot_battle <- tidy_BN %>%
-  filter(source == "Battle") %>%
+  filter(source == "Battle") %>% # filter by book 
   count(word, sort = TRUE) %>%
-  filter(n > 100) %>%
+  filter(n > 100) %>% # include words used more than 100 times
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill=word)) +
   geom_col() +
@@ -297,9 +305,9 @@ plot_battle <- tidy_BN %>%
   theme(legend.position="none")
 
 plot_navy <- tidy_BN %>%
-  filter(source == "Navy") %>%
+  filter(source == "Navy") %>% # filter by book 
   count(word, sort = TRUE) %>%
-  filter(n > 100) %>%
+  filter(n > 100) %>% # include words used more than 100 times
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill=word)) +
   geom_col() +
@@ -308,9 +316,9 @@ plot_navy <- tidy_BN %>%
   theme(legend.position="none")
 
 plot_flag <- tidy_BN %>%
-  filter(source == "Flag") %>%
+  filter(source == "Flag") %>% # filter by book 
   count(word, sort = TRUE) %>%
-  filter(n > 100) %>%
+  filter(n > 100) %>% # include words used more than 100 times
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(n, word, fill=word)) +
   geom_col() +
@@ -320,6 +328,7 @@ plot_flag <- tidy_BN %>%
 ```
 
 ```{r countplots, echo=FALSE}
+# show plots
 plot_battle + plot_navy + plot_flag
 ```
 
@@ -334,7 +343,7 @@ tidy_BN_count %>%
 When analysed for word importance it is seen that "enemy's" has by far the highest importance rating followed by "Koenigsberg" with these being the two most important words for The British Navy in Battle.  "Breech" was the most important word for The British Navy Book while or Flag and Fleet it was "Spaniards".
 
 ```{r importplot, echo=FALSE}
-# Show word importance by Tf-idf weighting for each book
+# Show word importance by Tf-idf weighting for each book in plots
 plot_importance <- tidy_BN_count %>%
   bind_tf_idf(word, source, n) %>%
   group_by(source) %>%
@@ -348,10 +357,11 @@ ggplot(plot_importance, aes(reorder(word, tf_idf), tf_idf, fill = source)) +
 ### Word networks
 
 ```{r wordnetwork, echo=FALSE}
-set.seed(1)
+set.seed(1) # set seed for reproducing
 
 a <- grid::arrow(type='closed', length = unit(0.25,"cm"))
 
+# create word network for Navy book
 navy_net <- tidy_BN_count %>%
   filter(n>150) %>%
   filter(source == "Navy") %>%
@@ -366,6 +376,7 @@ navy_net <- tidy_BN_count %>%
        subtitle = "The British Navy Book",
        x = "", y = "")
 
+# create word network for Flag book
 flag_net <- tidy_BN_count %>%
   filter(n>150) %>%
   filter(source == "Flag") %>%
@@ -380,6 +391,7 @@ flag_net <- tidy_BN_count %>%
        subtitle = "Flag and Fleet",
        x = "", y = "")
 
+# create word network for Battle book
 battle_net <- tidy_BN_count %>%
   filter(n>150) %>%
   filter(source == "Battle") %>%
@@ -396,6 +408,7 @@ battle_net <- tidy_BN_count %>%
 ```
 
 ```{r netplots, echo=FALSE}
+# show word networks
 navy_net + battle_net + flag_net
 ```
 
@@ -408,8 +421,10 @@ sentcorp <- tidy_BN %>%
   inner_join(get_sentiments("bing"), by = "word") %>%
   count(word, sentiment, sort = TRUE) 
 
+# check data
 head(sentcorp)
 
+# create bar plot of positive vs negative for corpus
 sentcorp %>%
   group_by(sentiment) %>%
   ggplot(aes(x = sentiment)) +
@@ -426,6 +441,7 @@ sent <- tidy_BN %>%
   count(source, word, sentiment, sort = TRUE) %>%
   ungroup()
 
+# create plots of positive/negative words by book
 sent %>%
   group_by(sentiment) %>%
   slice_max(n, n = 10) %>% 
